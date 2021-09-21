@@ -1,18 +1,33 @@
 import * as glob from 'glob'
 import * as path from 'path'
 
+import { IAppConfig } from 'config/app'
 import { Debugger } from '@secjs/logger'
+import { IHttpConfig } from 'config/http'
+import { IViewConfig } from 'config/view'
+import { ICorsConfig } from 'config/cors'
+import { ICacheConfig } from 'config/cache'
+import { ISwaggerConfig } from 'config/swagger'
+import { IDatabaseConfig } from 'config/database'
+import { IRateLimitConfig } from 'config/rateLimit'
+import { ConfigModuleOptions } from '@nestjs/config/dist/interfaces'
 
 interface IConfig {
-  isGlobal: boolean
-  load: [any]
-  [key: string]: any | any[]
+  app: IAppConfig
+  cache: ICacheConfig
+  cors: ICorsConfig
+  database: IDatabaseConfig
+  http: IHttpConfig
+  rateLimit: IRateLimitConfig
+  swagger: ISwaggerConfig
+  view: IViewConfig
 }
 
 export class ApplicationProvider {
   private debug = new Debugger('api:provider')
 
   static pipes: any[] = []
+  static seeds: any[] = []
   static models: any[] = []
   static schemas: any[] = []
   static configs: any = {}
@@ -30,16 +45,24 @@ export class ApplicationProvider {
     return ApplicationProvider.schemas
   }
 
+  get seeds() {
+    return ApplicationProvider.seeds
+  }
+
   get repositories() {
     return ApplicationProvider.repositories
   }
 
-  get configs(): IConfig {
+  get configModule(): ConfigModuleOptions {
     return {
       isGlobal: true,
+      ignoreEnvFile: true,
       load: [() => ApplicationProvider.configs],
-      ...ApplicationProvider.configs,
     }
+  }
+
+  get configs(): IConfig {
+    return ApplicationProvider.configs
   }
 
   get controllers() {
@@ -52,6 +75,7 @@ export class ApplicationProvider {
 
   get providers() {
     let providers = [
+      ...ApplicationProvider.seeds,
       ...ApplicationProvider.pipes,
       ...ApplicationProvider.services,
       ...ApplicationProvider.httpGuards,
@@ -60,6 +84,8 @@ export class ApplicationProvider {
 
     providers = providers.filter(provider => {
       if (!provider.prototype.onlyFromImports) return provider
+
+      return false
     })
 
     return providers
@@ -68,8 +94,10 @@ export class ApplicationProvider {
   clearMemory() {
     delete ApplicationProvider.configs
 
+    delete ApplicationProvider.seeds
     delete ApplicationProvider.pipes
     delete ApplicationProvider.models
+    delete ApplicationProvider.schemas
     delete ApplicationProvider.services
     delete ApplicationProvider.httpGuards
     delete ApplicationProvider.repositories
@@ -80,6 +108,7 @@ export class ApplicationProvider {
   }
 
   constructor() {
+    this.bootSeeds()
     this.bootPipes()
     this.bootModels()
     this.bootSchemas()
@@ -91,13 +120,36 @@ export class ApplicationProvider {
     this.bootConfigs()
   }
 
+  bootSeeds() {
+    const debug = this.debug
+
+    const fileExt = '.ts'
+    const filePath = 'database/seeds'
+
+    glob.sync(`${filePath}/**/*${fileExt}`).forEach(function (file) {
+      const fileName = path.parse(file).name
+      const replacedPath = file.replace(`${fileName}${fileExt}`, fileName)
+
+      const Class = require(`../${replacedPath}`)[fileName]
+
+      if (Class.prototype.ignore) {
+        debug.warn(`🌱 Ignoring ${fileName}`)
+
+        return
+      }
+
+      debug.debug(`🌱 Boot ${fileName}`)
+      ApplicationProvider.seeds.push(Class)
+    })
+  }
+
   bootPipes() {
     const debug = this.debug
 
     const fileExt = '.ts'
     const filePath = 'app/Pipes'
 
-    glob.sync(`${filePath}/**/*${fileExt}`).forEach(function(file) {
+    glob.sync(`${filePath}/**/*${fileExt}`).forEach(function (file) {
       const fileName = path.parse(file).name
       const replacedPath = file.replace(`${fileName}${fileExt}`, fileName)
 
@@ -119,7 +171,7 @@ export class ApplicationProvider {
     const fileExt = '.ts'
     const filePath = 'app/Models'
 
-    glob.sync(`${filePath}/**/*${fileExt}`).forEach(function(file) {
+    glob.sync(`${filePath}/**/*${fileExt}`).forEach(function (file) {
       const fileName = path.parse(file).name
       const replacedPath = file.replace(`${fileName}${fileExt}`, fileName)
 
@@ -141,7 +193,7 @@ export class ApplicationProvider {
     const fileExt = '.ts'
     const filePath = 'app/Schemas'
 
-    glob.sync(`${filePath}/**/*${fileExt}`).forEach(function(file) {
+    glob.sync(`${filePath}/**/*${fileExt}`).forEach(function (file) {
       const fileName = path.parse(file).name
       const replacedPath = file.replace(`${fileName}${fileExt}`, fileName)
 
@@ -164,14 +216,13 @@ export class ApplicationProvider {
     const fileExt = '.ts'
     const filePath = 'config'
 
-    glob.sync(`${filePath}/**/*${fileExt}`).forEach(function(file) {
+    glob.sync(`${filePath}/**/*${fileExt}`).forEach(function (file) {
       const fileName = path.parse(file).name
       const replacedPath = file.replace(`${fileName}${fileExt}`, fileName)
 
       debug.debug(`🔗 Boot ${fileName}`)
-      ApplicationProvider.configs[
-        fileName
-      ] = require(`../${replacedPath}`).default
+      ApplicationProvider.configs[fileName] =
+        require(`../${replacedPath}`).default
     })
   }
 
@@ -180,7 +231,7 @@ export class ApplicationProvider {
     const fileExt = '.ts'
     const filePath = 'app/Services'
 
-    glob.sync(`${filePath}/**/*${fileExt}`).forEach(function(file) {
+    glob.sync(`${filePath}/**/*${fileExt}`).forEach(function (file) {
       const fileName = path.parse(file).name
       const replacedPath = file.replace(`${fileName}${fileExt}`, fileName)
 
@@ -202,7 +253,7 @@ export class ApplicationProvider {
     const fileExt = '.ts'
     const filePath = 'app/Http/Guards'
 
-    glob.sync(`${filePath}/**/*${fileExt}`).forEach(function(file) {
+    glob.sync(`${filePath}/**/*${fileExt}`).forEach(function (file) {
       const fileName = path.parse(file).name
       const replacedPath = file.replace(`${fileName}${fileExt}`, fileName)
 
@@ -224,7 +275,7 @@ export class ApplicationProvider {
     const fileExt = '.ts'
     const filePath = 'app/Repositories'
 
-    glob.sync(`${filePath}/**/*${fileExt}`).forEach(function(file) {
+    glob.sync(`${filePath}/**/*${fileExt}`).forEach(function (file) {
       const fileName = path.parse(file).name
       const replacedPath = file.replace(`${fileName}${fileExt}`, fileName)
 
@@ -246,7 +297,7 @@ export class ApplicationProvider {
     const fileExt = '.ts'
     const filePath = 'app/Http/Middlewares'
 
-    glob.sync(`${filePath}/**/*${fileExt}`).forEach(function(file) {
+    glob.sync(`${filePath}/**/*${fileExt}`).forEach(function (file) {
       const fileName = path.parse(file).name
       const replacedPath = file.replace(`${fileName}${fileExt}`, fileName)
 
@@ -271,7 +322,7 @@ export class ApplicationProvider {
     const fileExt = '.ts'
     const filePath = 'app/Http/Controllers'
 
-    glob.sync(`${filePath}/**/*${fileExt}`).forEach(function(file) {
+    glob.sync(`${filePath}/**/*${fileExt}`).forEach(function (file) {
       const fileName = path.parse(file).name
       const replacedPath = file.replace(`${fileName}${fileExt}`, fileName)
 

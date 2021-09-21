@@ -1,5 +1,6 @@
 import App from 'providers/ApplicationProvider'
 
+import { CacheModule } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 
 /*
@@ -12,4 +13,7 @@ import { ConfigModule } from '@nestjs/config'
 |
 */
 
-export default [ConfigModule.forRoot(App.configs)]
+export default [
+  ConfigModule.forRoot(App.configModule),
+  CacheModule.registerAsync(App.configs.cache.redis),
+]

@@ -1,0 +1,19 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://postgres:root@localhost:5433/postgres?schema=public"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Example {
+  id String @default(uuid()) @id()
+  status String @default("pendent")
+  deletedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+}

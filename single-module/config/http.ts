@@ -1,4 +1,8 @@
-import { HttpModuleOptions } from '@nestjs/common'
+export interface IHttpConfig {
+  timeout: number
+  maxRedirects: number
+  services: any
+}
 
 export default {
   /*
@@ -30,4 +34,4 @@ export default {
   |
   */
   services: {},
-} as HttpModuleOptions
+} as IHttpConfig

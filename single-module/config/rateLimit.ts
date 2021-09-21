@@ -1,3 +1,8 @@
+export interface IRateLimitConfig {
+  windowMs: number
+  max: number
+}
+
 export default {
   /*
   |--------------------------------------------------------------------------
@@ -7,7 +12,7 @@ export default {
   | Fifteen minutes for max of limited request
   |
   */
-  windowMs: 15 * 60 * 1000, // 15 minutes
+  windowMs: 1 * 60 * 1000, // 1 minutes
 
   /*
   |--------------------------------------------------------------------------
@@ -18,4 +23,4 @@ export default {
   |
   */
   max: 100,
-}
+} as IRateLimitConfig

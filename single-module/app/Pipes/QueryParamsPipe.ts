@@ -6,7 +6,7 @@ import { PipeTransform, Injectable } from '@nestjs/common'
 export class QueryParamsPipe implements PipeTransform {
   transform(object: any): ApiRequestContract {
     const apiRequest: ApiRequestContract = {
-      isInternRequest: true,
+      isInternRequest: false,
       where: {},
       orderBy: {},
       includes: [],

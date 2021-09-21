@@ -123,4 +123,5 @@ dist
 .env.production
 
 # ignore third party projects
-public/*
+public/repositories/*
+!public/repositories/.gitkeep

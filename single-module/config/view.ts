@@ -1,5 +1,13 @@
-import app from 'config/app'
 import { join } from 'path'
+
+export interface IViewConfig {
+  paths: {
+    mail: string[]
+    images: string
+    views: string
+    assets: string
+  }
+}
 
 export default {
   /*
@@ -13,8 +21,20 @@ export default {
   */
 
   paths: {
-    mail: [process.cwd() + '/public/Views/Mail'],
-    images: join(process.cwd(), 'public', 'static', 'images'),
-    staticPath: `${app.prefix}/statics`,
+    views: join(process.cwd() + '/public/views'),
+    images: join(process.cwd(), '/public/images'),
+    assets: join(process.cwd() + '/public/assets'),
+    mail: [process.cwd() + '/public/views/mail'],
   },
-}
+
+  /*
+  |--------------------------------------------------------------------------
+  | Routes that returns a view
+  |--------------------------------------------------------------------------
+  |
+  | All the routes that need to be ignored inside ResponseInterceptor.
+  |
+  */
+
+  routes: ['/', '/git/insomnia'],
+} as IViewConfig

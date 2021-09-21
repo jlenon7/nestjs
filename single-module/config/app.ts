@@ -1,5 +1,36 @@
-import Env from '@secjs/env'
 import * as packageJson from '../package.json'
+
+import Env from '@secjs/env'
+
+import { RequestMethod } from '@nestjs/common'
+import { IFullException } from 'app/Http/Filters/AllExceptionFilter'
+
+export interface IErrorMappers {
+  secJs: (exception: any) => IFullException
+}
+export interface IAppConfig {
+  name: string
+  description: string
+  host: string
+  port: number
+  domain: string
+  prefix: {
+    name: string
+    exclude: { path: string; method: RequestMethod }[]
+  }
+  appKey: string
+  version: string
+  locale: string
+  environment: string
+  authorization: {
+    defaultStrategy: string
+    jwt: {
+      secret: string
+      signOptions: { expiresIn: number }
+    }
+  }
+  errorMappers: IErrorMappers
+}
 
 export default {
   /*
@@ -50,19 +81,19 @@ export default {
   |
   */
 
-  port: Env('PORT', 3000),
+  port: Env({ name: 'PORT', type: 'number' }, 3000),
 
   /*
     |--------------------------------------------------------------------------
-    | Application url
+    | Application domain
     |--------------------------------------------------------------------------
     |
-    | This value is the APP_URL of your application and its used to access your
+    | This value is the APP_DOMAIN of your application and its used to access your
     | application.
     |
     */
 
-  appUrl: Env('APP_URL', 'http://localhost:3333'),
+  domain: Env('APP_DOMAIN', 'http://localhost:3000'),
 
   /*
   |--------------------------------------------------------------------------
@@ -75,7 +106,47 @@ export default {
   |
   */
 
-  prefix: Env('APP_PREFIX', '/srv'),
+  prefix: {
+    name: Env('APP_PREFIX', '/srv'),
+    exclude: [
+      { path: '/', method: RequestMethod.GET },
+      { path: '/git', method: RequestMethod.GET },
+    ],
+  },
+
+  /*
+  |--------------------------------------------------------------------------
+  | Application key
+  |--------------------------------------------------------------------------
+  |
+  | This value is the application key used to make hashs and to authorize,
+  | requests.
+  |
+  */
+
+  appKey: Env('APP_KEY', '12345'),
+
+  /*
+  |--------------------------------------------------------------------------
+  | Application source url
+  |--------------------------------------------------------------------------
+  |
+  | This value is the application source url, usually a link to a git repo-
+  | sitory.
+  |
+  */
+  source: Env('APP_SOURCE', 'https://github.com'),
+
+  /*
+  |--------------------------------------------------------------------------
+  | Documentation url
+  |--------------------------------------------------------------------------
+  |
+  | This value is the application documentation url, usually a link to the
+  | main documentation of the API.
+  |
+  */
+  documentation: Env('APP_DOMAIN', 'http://localhost:3000'),
 
   /*
   |--------------------------------------------------------------------------
@@ -125,5 +196,25 @@ export default {
       secret: Env('APP_KEY', ''),
       signOptions: { expiresIn: 18000 },
     },
+    apiKey: Env('APP_KEY', '12345'),
   },
-}
+
+  errorMappers: {
+    secJs: (exception: any): IFullException => {
+      return {
+        isSecJsException: true,
+        name: exception.name,
+        stack: exception.stack,
+        status: exception.status,
+        message: {
+          error: exception.name
+            .replace('Exception', 'Error')
+            .replace(/([A-Z])/g, ' $1')
+            .trim(),
+          message: exception.message,
+          statusCode: exception.status,
+        },
+      }
+    },
+  },
+} as IAppConfig

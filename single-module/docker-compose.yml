@@ -1,23 +1,38 @@
 version: '3'
 
 services:
-  api:
+  redis-api-projects:
+    image: redis
+    command: redis-server
+    ports:
+      - "6379:6379"
+    networks:
+      - lkp_dev
+  postgres-api-projects:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5432:5432"
+    networks:
+      - lkp_dev
+  api-projects:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: api
-    volumes:
-      - ./:/process
-      - /process/node_modules
     ports:
-      - "3333:3333"
+      - "3000:3000"
     env_file:
       - .env
     networks:
-      - secjs-network
+      - lkp_dev
     restart: on-failure
+    depends_on: 
+      - "redis-api-projects"
+      - "postgres-api-projects"
 
 networks:
-  secjs-network:
+  lkp_dev:
     external:
-      name: secjs-network
+      name: lkp_dev

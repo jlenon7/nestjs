@@ -13,13 +13,14 @@ export const Options = (options?: IOptions): MethodDecorator => {
 
     const originalFunction: Function = descriptor.value
 
-    descriptor.value = async function() {
+    descriptor.value = async function () {
       const newArgs = [...arguments]
 
       newArgs[options.parameterIndex] = arguments[options.parameterIndex] || {
         where: {},
         orderBy: {},
         includes: [],
+        otherQueries: {},
       }
 
       return originalFunction.apply(this, newArgs)

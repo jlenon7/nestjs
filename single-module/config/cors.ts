@@ -1,3 +1,10 @@
+export interface ICorsConfig {
+  origin: boolean
+  methods: string
+  credentials: boolean
+  maxAge: number
+}
+
 export default {
   /*
   |--------------------------------------------------------------------------
@@ -49,4 +56,4 @@ export default {
   |
   */
   maxAge: 90,
-}
+} as ICorsConfig

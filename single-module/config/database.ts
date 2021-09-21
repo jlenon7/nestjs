@@ -1,7 +1,5 @@
 import Env from '@secjs/env'
 
-import { ApplicationProvider } from 'providers/ApplicationProvider'
-
 const createUri = (name: string): string => {
   if (name === 'default') name = ''
 
@@ -13,6 +11,25 @@ const createUri = (name: string): string => {
   const host = Env(`${name}DB_HOST`, 'cluster0.uagp0.mongodb.net')
 
   return `${con}://${user}:${pass}@${host}/${db}?${options}`
+}
+
+export interface IDatabaseConfig {
+  default: {
+    url: string
+    options: {
+      useCreateIndex: boolean
+      useNewUrlParser: boolean
+      useFindAndModify: boolean
+      useUnifiedTopology: boolean
+      connectionName: string
+    }
+    schemas: any[]
+  }
+  redis: {
+    host: string
+    port: number
+    password: string
+  }
 }
 
 export default {
@@ -35,6 +52,22 @@ export default {
       useUnifiedTopology: true,
       connectionName: 'default',
     },
-    schemas: ApplicationProvider.schemas,
+    schemas: [],
   },
-}
+
+  /*
+  |--------------------------------------------------------------------------
+  | Redis
+  |--------------------------------------------------------------------------
+  |
+  | Here we define connection settings for Redis database.
+  |
+  | npm i --save redis
+  |
+  */
+  redis: {
+    host: Env('REDIS_HOST', 'localhost'),
+    port: Env({ name: 'REDIS_PORT', type: 'number' }, 6379),
+    password: Env('REDIS_PASSWORD', ''),
+  },
+} as IDatabaseConfig

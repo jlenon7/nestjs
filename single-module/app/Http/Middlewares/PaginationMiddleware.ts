@@ -13,17 +13,13 @@ export class PaginationMiddleware implements NestMiddleware {
   @Inject(ConfigService) private configService: ConfigService
 
   static get routes(): RouteMiddleware[] {
-    return [
-      { path: '/tests', method: RequestMethod.GET },
-    ]
+    return [{ path: '/examples', method: RequestMethod.GET }]
   }
 
   use(req, res, next) {
     const page = req.query.page ? parseInt(req.query.page) : 0
     const limit = req.query.limit ? parseInt(req.query.limit) : 10
-    const resourceUrl = `${this.configService.get('app.appUrl')}${
-      req.route.path
-    }`
+    const resourceUrl = `${this.configService.get('app.domain')}${req.baseUrl}`
 
     req.pagination = {
       page,
