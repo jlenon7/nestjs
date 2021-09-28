@@ -1,6 +1,6 @@
 import { Schema } from 'joi'
 
-import { BadRequestException, Injectable } from '@nestjs/common'
+import { UnprocessableEntityException, Injectable } from '@nestjs/common'
 import { PipeValidatorContract } from 'app/Contracts/PipeValidatorContract'
 
 @Injectable()
@@ -16,10 +16,10 @@ export class PipeValidator<T> implements PipeValidatorContract {
       const messages = []
       error.details.forEach(detail => messages.push(detail.message))
 
-      throw new BadRequestException({
+      throw new UnprocessableEntityException({
         name: 'Validation Error',
         validations: messages,
-        statusCode: 400,
+        statusCode: 422,
       })
     }
 

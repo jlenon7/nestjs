@@ -1,8 +1,8 @@
 import * as insomniaCollection from 'docs/Collection.json'
 
 import { ApiTags } from '@nestjs/swagger'
-import { getCommitId } from '@secjs/utils'
 import { ConfigService } from '@nestjs/config'
+import { getBranch, getCommitId } from '@secjs/utils'
 import { Controller, Get, Render } from '@nestjs/common'
 
 @Controller()
@@ -12,6 +12,7 @@ export class WelcomeController {
 
   async response() {
     return {
+      branch: await getBranch(),
       commit: await getCommitId(),
       greeting: `Welcome to ${this.configService.get('app.name')}!`,
       name: this.configService.get('app.name'),
