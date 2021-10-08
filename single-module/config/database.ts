@@ -70,4 +70,15 @@ export default {
     port: Env({ name: 'REDIS_PORT', type: 'number' }, 6379),
     password: Env('REDIS_PASSWORD', ''),
   },
+
+  /*
+  |--------------------------------------------------------------------------
+  | Tables
+  |--------------------------------------------------------------------------
+  |
+  | Here we define all the tables with her respective repository. Common used
+  | by validators to get the exactly dependency by tables name.
+  |
+  */
+  tables: {},
 } as IDatabaseConfig

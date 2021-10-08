@@ -14,7 +14,8 @@ export interface PipeValidatorContract<T = any> {
    * Method to validate parameters transformed by transform
    *
    * @param schema validation, could be an update or store validation
+   * @param type the validation type that is going to be used, default createSchema
    * @param value argument before it is received by route handler method
    */
-  validate(schema: Schema, value: T | any | any[]): Promise<T>
+  validate(schema: Schema, type: string, value: T | any | any[]): Promise<T>
 }

@@ -1,28 +1,32 @@
-import { Schema } from 'joi'
+import {
+  Inject,
+  Injectable,
+  UnprocessableEntityException,
+} from '@nestjs/common'
 
-import { UnprocessableEntityException, Injectable } from '@nestjs/common'
+import { ModuleRef } from '@nestjs/core'
 import { PipeValidatorContract } from 'app/Contracts/PipeValidatorContract'
 
 @Injectable()
 export class PipeValidator<T> implements PipeValidatorContract {
+  @Inject(ModuleRef)
+  private moduleRef: ModuleRef
+
   async transform(value: any, metadata: any) {
-    return this.validate(metadata.metatype.schema, value)
+    const validator = this.moduleRef.get(metadata.metatype.validator)
+
+    return this.validate(validator, metadata.metatype.type, value)
   }
 
-  async validate(schema: Schema, value: Partial<T>) {
-    const { error } = schema.validate(value, { abortEarly: false })
+  async validate(validator: any, type: string, value: Partial<T>) {
+    const errorMessages = await validator.validateAll(value, type)
 
-    if (error) {
-      const messages = []
-      error.details.forEach(detail => messages.push(detail.message))
+    if (!errorMessages || !errorMessages.length) return value
 
-      throw new UnprocessableEntityException({
-        name: 'Validation Error',
-        validations: messages,
-        statusCode: 422,
-      })
-    }
-
-    return value
+    throw new UnprocessableEntityException({
+      name: 'Unprocessable Entity Error',
+      message: errorMessages,
+      statusCode: 422,
+    })
   }
 }
