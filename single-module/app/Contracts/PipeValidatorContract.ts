@@ -1,4 +1,3 @@
-import { Schema } from 'joi'
 import { ArgumentMetadata } from '@nestjs/common/interfaces/features/pipe-transform.interface'
 
 export interface PipeValidatorContract<T = any> {
@@ -13,9 +12,9 @@ export interface PipeValidatorContract<T = any> {
   /**
    * Method to validate parameters transformed by transform
    *
-   * @param schema validation, could be an update or store validation
+   * @param validator validator class extended from @secjs/validator.Validator
    * @param type the validation type that is going to be used, default createSchema
    * @param value argument before it is received by route handler method
    */
-  validate(schema: Schema, type: string, value: T | any | any[]): Promise<T>
+  validate(validator: any, type: string, value: T | any | any[]): Promise<T>
 }
