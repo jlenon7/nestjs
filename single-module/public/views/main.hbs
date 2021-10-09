@@ -44,16 +44,17 @@
     <!-- Navbar -->
     <nav class="primary-menu navbar navbar-expand-lg bg-dark navbar-text-light navbar-dropdown-dark border-0">
       <div class="container-fluid">
-      <!-- Sidebar Toggler -->
-      <button id="sidebarCollapse" class="navbar-toggler d-block d-md-none" type="button"><span></span><span class="w-75"></span><span></span></button>
+        <!-- Sidebar Toggler -->
+        <button id="sidebarCollapse" class="navbar-toggler d-block d-md-none" type="button"><span></span><span class="w-75"></span><span></span></button>
 
-      <!-- Logo -->
-      <a class="logo ml-md-3" href="/" title="Home"> <img src="assets/images/logo-linkapi-horizontal.png" width="200" alt="Home"/> </a>
-      <span class="text-2 text-light ml-2">v{{ version }} | {{ branch }}</span>
-      <!-- Logo End -->
+        <!-- Logo -->
+        <a class="logo ml-md-3" href="/" title="Home"> <img src="assets/images/logo-linkapi-horizontal.png" width="200" alt="Home"/> </a>
+        <span class="text-2 text-light ml-2">v{{ version }} | {{ branch }}</span>
+        <!-- Logo End -->
 
-      <!-- Navbar Toggler -->
-      <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#header-nav"></button>
+        <!-- Navbar Toggler -->
+        <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#header-nav"></button>
+      </div>
     </nav>
     <!-- Navbar End -->
   </header>
@@ -63,8 +64,8 @@
   ============================ -->
   <div id="content" role="main">
 
-	<!-- Sidebar Navigation -->
-	<div class="idocs-navigation bg-light">
+    <!-- Sidebar Navigation -->
+    <div class="idocs-navigation bg-light">
       <ul class="nav flex-column ">
         <li class="nav-item"><a class="nav-link" href="#idocs_start">☕ Start</a></li>
         <li class="nav-item"><a class="nav-link active" href="#idocs_running_the_project">🚀 Running the project</a>
@@ -82,8 +83,8 @@
             <li class="nav-item"><a class="nav-link" href="#idocs_project_structure">Project structure</a></li>
           </ul>
         </li>
-        <li class="nav-item"><a class="nav-link" href="#idocs_environment_variables">📤 Enviroment Variables</a>
-			    <ul class="nav flex-column">
+        <li class="nav-item"><a class="nav-link" href="#idocs_environment_variables">📤 Environment Variables</a>
+          <ul class="nav flex-column">
             <li class="nav-item"><a class="nav-link" href="#idocs_env_host">HOST</a></li>
             <li class="nav-item"><a class="nav-link" href="#idocs_env_port">PORT</a></li>
             <li class="nav-item"><a class="nav-link" href="#idocs_env_node_env">NODE_ENV</a></li>
@@ -92,12 +93,12 @@
             <li class="nav-item"><a class="nav-link" href="#idocs_env_app_name">APP_NAME</a></li>
             <li class="nav-item"><a class="nav-link" href="#idocs_env_app_source">APP_SOURCE</a></li>
             <li class="nav-item"><a class="nav-link" href="#idocs_env_app_description">APP_DESCRIPTION</a></li>
-            <li class="nav-item"><a class="nav-link" href="#idocs_env_aws_key">AWS_KEY</a></li>
-            <li class="nav-item"><a class="nav-link" href="#idocs_env_aws_region">AWS_REGION</a></li>
-            <li class="nav-item"><a class="nav-link" href="#idocs_env_aws_secret">AWS_SECRET</a></li>
-            <li class="nav-item"><a class="nav-link" href="#idocs_env_aws_git_user">AWS_GIT_USER</a></li>
-            <li class="nav-item"><a class="nav-link" href="#idocs_env_aws_git_password">AWS_GIT_PASSWORD</a></li>
-            <li class="nav-item"><a class="nav-link" href="#idocs_env_database_url">DATABASE_URL</a></li>
+            <li class="nav-item"><a class="nav-link" href="#idocs_env_db_host">DB_HOST</a></li>
+            <li class="nav-item"><a class="nav-link" href="#idocs_env_db_options">DB_OPTIONS</a></li>
+            <li class="nav-item"><a class="nav-link" href="#idocs_env_db_username">DB_USERNAME</a></li>
+            <li class="nav-item"><a class="nav-link" href="#idocs_env_db_password">DB_PASSWORD</a></li>
+            <li class="nav-item"><a class="nav-link" href="#idocs_env_db_database">DB_DATABASE</a></li>
+            <li class="nav-item"><a class="nav-link" href="#idocs_env_db_connection">DB_CONNECTION</a></li>
             <li class="nav-item"><a class="nav-link" href="#idocs_env_redis_host">REDIS_HOST</a></li>
             <li class="nav-item"><a class="nav-link" href="#idocs_env_redis_port">REDIS_PORT</a></li>
             <li class="nav-item"><a class="nav-link" href="#idocs_env_redis_password">REDIS_PASSWORD</a></li>
@@ -107,7 +108,7 @@
           <ul class="nav flex-column">
             <li class="nav-item"><a class="nav-link" href="#idocs_swagger">Swagger</a></li>
             <li class="nav-item"><a class="nav-link" href="#idocs_insomnia">Insomnia</a></li>
-            <li class="nav-item"><a class="nav-link" href="#idocs_query_searchs">Query Searchs</a></li>
+            <li class="nav-item"><a class="nav-link" href="#idocs_query_searchs">Query Searches</a></li>
           </ul>
         </li>
         <li class="nav-item"><a class="nav-link" href="#idocs_source">😸 Source</a></li>
@@ -159,7 +160,7 @@
           <p>First install the project dependencies</p>
           <pre><code>npm install</code></pre>
 
-          <p>Generate the archive .env and change the connection of Redis and PostgreSQL</p>
+          <p>Generate the archive .env and change the connection of Redis and MongoDB</p>
           <pre><code>cp .env.example .env && cp .env.example .env.testing</code></pre>
 
           <hr>
@@ -168,13 +169,10 @@
           <p>Run a instance of <b>Redis</b> database for <b>testing</b> and <b>development</b> using <b>Docker</b></p>
           <pre><code>docker run --name=redis-devel --publish=6379:6379 --hostname=redis --restart=on-failure --detach redis:latest</code></pre>
 
-          <p>Run a instance of <b>PostgreSQL</b> database for <b>testing</b> and <b>development</b> using <b>Docker</b></p>
-          <pre><code>docker run --name postgresql -e POSTGRES_PASSWORD=root -p 5433:5432 -d postgres</code></pre>
+          <p>Run a instance of <b>MongoDB</b> cluster for <b>testing</b> and <b>development</b> using <b>Docker</b></p>
+          <pre><code>docker run --name=mongodb-devel -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=root -e MONGO_INITDB_ROOT_PASSWORD=root -d mongo</code></pre>
 
           <hr>
-
-          <p class="alert alert-warning">When you're running the <b>test</b> and <b>development</b> commands, we assume that you've already set all your <b>environment variables</b>. Otherwise <b>failures</b> will appear when running the project, or calling an endpoint.</p>
-          <p class="alert alert-warning">If you use a different <b>DATABASE_URL</b> for testing instead the default of the <b>.env.example</b>, you need to change it inside <b>./prisma/schema.testing.prisma</b> file, because <b>Prisma only reads the main .env file</b>. He ignores the <b>.env.testing</b> file.</p>
 
           <h3 id="idocs_running_tests">Tests</h3>
           <p>To run <b>E2E</b> and <b>Unit</b> tests</p>
@@ -184,14 +182,11 @@
           <pre><code>npm run test:debug</code></pre>
 
           <p>To run a specific test use <b>test</b> or <b>test:debug</b> and the path to the test</p>
-          <pre><code>npm run test tests/Unit/Collections/your-test-name.spec.ts</code></pre>
+          <pre><code>npm run test tests/Unit/Collections/codeCommit.spec.ts</code></pre>
 
           <hr>
 
           <h3 id="idocs_running_production">Production</h3>
-          <p>To run the project <b>migrations</b> and generate the models with <b>Prisma</b></p>
-          <pre><code>npm run migrate:prod && npm run generate:prod</code></pre>
-
           <p>To run the application in <b>production</b> mode</p>
           <pre><code>npm start</code></pre>
 
@@ -201,9 +196,6 @@
           <hr>
 
           <h3 id="idocs_running_development">Development</h3>
-          <p>To run the project <b>migrations</b> and generate the models with <b>Prisma</b></p>
-          <pre><code>npm run migrate:dev && npm run generate:dev</code></pre>
-
           <p>To run the application in <b>development</b> mode</p>
           <pre><code>npm run start:dev</code></pre>
 
@@ -230,31 +222,37 @@
           <p>🛑 Is extremely important to follow this project structure to <b>providers/ApplicationProvider</b> works</p>
           <pre>
             <code>app
-├── Base
-│   ├── *.ts
 ├── Contracts
 │   ├── Dtos
 │   ├── *Contract.ts
+├── Decorators
+|   ├── Http
+|   ├── Providers
+│   ├── Services
 ├── Http
 │   ├── Filters
 │   ├── Guards
 │   ├── Interceptors
 │   ├── Middlewares
 │   ├── Controllers
-├── Decorators
-|   ├── Http
-|   ├── Providers
-│   ├── Services
 ├── Models
 │   ├── *.ts
 ├── Pipes
 │   ├── *Pipe.ts
 ├── Repositories
 │   ├── *Repository.ts
+├── Resources
+│   ├── *Resource.ts
+├── Schemas
+│   ├── *.ts
 ├── Services
 │   ├── Api
 │   ├── Collections
 │   ├── Utils
+├── Utils
+│   ├── *.ts
+├── Validators
+│   ├── *Validator.ts
 ├── AppModule.ts
 config
 ├── *.ts
@@ -335,39 +333,39 @@ tests
 
           <hr>
 
-          <h3 id="idocs_env_aws_key">AWS_KEY</h3>
-          <p>Used to set AWS authentication for Code Commit and Git.</p>
-          <pre><code>AWS_KEY=""</code></pre>
+          <h3 id="idocs_env_db_host">DB_HOST</h3>
+          <p>Used to connect to Mongo database host.</p>
+          <pre><code>DB_HOST="cluster0.uagp0.mongodb.net"</code></pre>
 
           <hr>
 
-          <h3 id="idocs_env_aws_region">AWS_REGION</h3>
-          <p>Used to set AWS authentication for Code Commit and Git.</p>
-          <pre><code>AWS_REGION=""</code></pre>
+          <h3 id="idocs_env_db_options">DB_OPTIONS</h3>
+          <p>Used to connect to Mongo database with some options you preffer as query string.</p>
+          <pre><code>DB_OPTIONS="retryWrites=true&w=majority"</code></pre>
 
           <hr>
 
-          <h3 id="idocs_env_aws_secret">AWS_SECRET</h3>
-          <p>Used to set AWS authentication for Code Commit and Git.</p>
-          <pre><code>AWS_SECRET=""</code></pre>
+          <h3 id="idocs_env_db_username">DB_USERNAME</h3>
+          <p>Used to connect to Mongo database with some determined user.</p>
+          <pre><code>DB_USERNAME="root"</code></pre>
 
           <hr>
 
-          <h3 id="idocs_env_aws_git_user">AWS_GIT_USER</h3>
-          <p>Used to set AWS authentication for Code Commit and Git.</p>
-          <pre><code>AWS_GIT_USER=""</code></pre>
+          <h3 id="idocs_env_db_password">DB_PASSWORD</h3>
+          <p>Used to connect to Mongo database with some determined password.</p>
+          <pre><code>DB_PASSWORD="root"</code></pre>
 
           <hr>
 
-          <h3 id="idocs_env_aws_git_password">AWS_GIT_PASSWORD</h3>
-          <p>Used to set AWS authentication for Code Commit and Git.</p>
-          <pre><code>AWS_GIT_PASSWORD=""</code></pre>
+          <h3 id="idocs_env_db_database">DB_DATABASE</h3>
+          <p>Used to connect to a specific Mongo database.</p>
+          <pre><code>DB_DATABASE="root"</code></pre>
 
           <hr>
 
-          <h3 id="idocs_env_database_url">DATABASE_URL</h3>
-          <p>Used to connect to PostgreSQL database.</p>
-          <pre><code>DATABASE_URL="postgresql://postgres:root@localhost:5433/api-git?schema=public"</code></pre>
+          <h3 id="idocs_env_db_connection">DB_CONNECTION</h3>
+          <p>Used to set the type of connection to use in connection to Mongo database.</p>
+          <pre><code>DB_CONNECTION="mongodb+srv"</code></pre>
 
           <hr>
 
@@ -407,7 +405,7 @@ tests
 
           <hr>
 
-          <h3 id="idocs_query_searchs">Query Searchs</h3>
+          <h3 id="idocs_query_searchs">Query Searches</h3>
           <p>This API was developed in a way that it was possible to make any type of filter for the database, see the types of filters using query parameters:</p>
           <b><code>(*) - Will fetch a where query</code></b><br><br>
           <pre><code>*name='%teste' // Where name is like teste
@@ -428,114 +426,7 @@ _repositories=['user'] // Will include repositories inside project and user insi
           <hr>
 
           <h5>Other simple queries <small class="text-muted">(See more in <a class="ml-1" target="_blank" href="{{ domain }}{{ prefix }}/insomnia"><i class="fas fa-external-link-alt"></i> Insomnia collection</a>)</small></h5>
-
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th scope="col">METHOD</th>
-                <th scope="col">URI</th>
-                <th scope="col">NAME</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">GET</th>
-                <td>/git/projects</td>
-                <td>projects.index</td>
-              </tr>
-              <tr>
-                <th scope="row">POST</th>
-                <td>/git/projects</td>
-                <td>projects.store</td>
-              </tr>
-              <tr>
-                <th scope="row">GET</th>
-                <td>/git/projects/<b>:id</b></td>
-                <td>projects.show</td>
-              </tr>
-              <tr>
-                <th scope="row">PUT</th>
-                <td>/git/projects/<b>:id</b></td>
-                <td>projects.update</td>
-              </tr>
-              <tr>
-                <th scope="row">DELETE</th>
-                <td>/git/projects/<b>:id</b></td>
-                <td>projects.delete</td>
-              </tr>
-            </tbody>
-          </table>
-          <b><code>projects.index</code></b><br>
-          <code>Pagination - ?page=0&limit=10</code>
-
-          <hr>
-
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th scope="col">METHOD</th>
-                <th scope="col">URI</th>
-                <th scope="col">NAME</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">GET</th>
-                <td>/git/repositories</td>
-                <td>repositories.index</td>
-              </tr>
-              <tr>
-                <th scope="row">POST</th>
-                <td>/git/repositories</td>
-                <td>repositories.store</td>
-              </tr>
-              <tr>
-                <th scope="row">GET</th>
-                <td>/git/repositories/<b>:id</b></td>
-                <td>repositories.show</td>
-              </tr>
-              <tr>
-                <th scope="row">PUT</th>
-                <td>/git/repositories/<b>:id</b></td>
-                <td>repositories.update</td>
-              </tr>
-              <tr>
-                <th scope="row">DELETE</th>
-                <td>/git/repositories/<b>:id</b></td>
-                <td>repositories.delete</td>
-              </tr>
-              <tr>
-                <th scope="row">PUT</th>
-                <td>/git/repositories/<b>:id</b>/merge</td>
-                <td>repositories.merge</td>
-              </tr>
-              <tr>
-                <th scope="row">PUT</th>
-                <td>/git/repositories/<b>:id</b>/commit</td>
-                <td>repositories.commit</td>
-              </tr>
-              <tr>
-                <th scope="row">PUT</th>
-                <td>/git/repositories/<b>:id</b>/branch</td>
-                <td>repositories.branch</td>
-              </tr>
-            </tbody>
-          </table>
-          <b><code>repositories.index</code></b><br>
-          <code>Pagination - ?page=0&limit=10</code><br>
-          <code>cloneUrlSsh/cloneUrlHttp auth - ?withAuth=true</code>
-
-          <br><br>
-
-          <b><code>repositories.show</code></b><br>
-          <code>Clone and cache - ?clone=true</code><br>
-          <code>Force clone and update cache - ?forceClone=true</code><br>
-          <code>Clone by branch - ?branch=development</code><br>
-          <code>Clone by commitId - ?commitId=commitHash</code><br>
-          <code>cloneUrlSsh/cloneUrlHttp auth - ?withAuth=true</code>
         </section>
-
-        <hr class="divider">
 
         <!-- Source -->
         <section id="idocs_source">
@@ -559,7 +450,7 @@ _repositories=['user'] // Will include repositories inside project and user insi
           <h2>🌱 Changelog</h2>
           <p class="text-4">See what's new added, changed, fixed, improved or updated in the latest versions.</p>
 
-          <h3 id="v1.0.0">Version 1.0.0 <small class="text-muted">(08 Oct, 2021)</small></h3>
+          <h3 id="v1.0.0">Version 1.0.0 <small class="text-muted">(09 Oct, 2021)</small></h3>
 
           <ul class="changelog">
             <li><span class="badge badge-success">Added</span> Initial boilerplate commit.</li>

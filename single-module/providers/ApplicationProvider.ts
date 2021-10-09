@@ -26,16 +26,23 @@ interface IConfig {
 export class ApplicationProvider {
   private debug = new Debugger('api:provider')
 
+  static utils: any[] = []
   static pipes: any[] = []
   static seeds: any[] = []
   static models: any[] = []
   static schemas: any[] = []
   static configs: any = {}
   static services: any[] = []
+  static factories: any[] = []
+  static validators: any[] = []
   static httpGuards: any[] = []
   static repositories: any[] = []
   static httpMiddlewares: any[] = []
   static httpControllers: any[] = []
+
+  get utils() {
+    return ApplicationProvider.utils
+  }
 
   get models() {
     return ApplicationProvider.models
@@ -47,6 +54,14 @@ export class ApplicationProvider {
 
   get seeds() {
     return ApplicationProvider.seeds
+  }
+
+  get factories() {
+    return ApplicationProvider.factories
+  }
+
+  get validators() {
+    return ApplicationProvider.validators
   }
 
   get repositories() {
@@ -77,7 +92,10 @@ export class ApplicationProvider {
     let providers = [
       ...ApplicationProvider.seeds,
       ...ApplicationProvider.pipes,
+      ...ApplicationProvider.utils,
       ...ApplicationProvider.services,
+      ...ApplicationProvider.factories,
+      ...ApplicationProvider.validators,
       ...ApplicationProvider.httpGuards,
       ...ApplicationProvider.repositories,
     ]
@@ -96,9 +114,12 @@ export class ApplicationProvider {
 
     delete ApplicationProvider.seeds
     delete ApplicationProvider.pipes
+    delete ApplicationProvider.utils
     delete ApplicationProvider.models
     delete ApplicationProvider.schemas
     delete ApplicationProvider.services
+    delete ApplicationProvider.factories
+    delete ApplicationProvider.validators
     delete ApplicationProvider.httpGuards
     delete ApplicationProvider.repositories
     delete ApplicationProvider.httpMiddlewares
@@ -110,9 +131,12 @@ export class ApplicationProvider {
   constructor() {
     this.bootSeeds()
     this.bootPipes()
+    this.bootUtils()
     this.bootModels()
     this.bootSchemas()
     this.bootServices()
+    this.bootFactories()
+    this.bootValidators()
     this.bootHttpGuards()
     this.bootRepositories()
     this.bootHttpMiddlewares()
@@ -162,6 +186,29 @@ export class ApplicationProvider {
       }
 
       debug.debug(`🔩 Boot ${fileName}`)
+      ApplicationProvider.pipes.push(Class)
+    })
+  }
+
+  bootUtils() {
+    const debug = this.debug
+
+    const fileExt = '.ts'
+    const filePath = 'app/Utils'
+
+    glob.sync(`${filePath}/**/*${fileExt}`).forEach(function (file) {
+      const fileName = path.parse(file).name
+      const replacedPath = file.replace(`${fileName}${fileExt}`, fileName)
+
+      const Class = require(`../${replacedPath}`)[fileName]
+
+      if (Class.prototype.ignore) {
+        debug.warn(`⛑️ Ignoring ${fileName}`)
+
+        return
+      }
+
+      debug.debug(`⛑️ Boot ${fileName}`)
       ApplicationProvider.pipes.push(Class)
     })
   }
@@ -245,6 +292,50 @@ export class ApplicationProvider {
 
       debug.debug(`🔧 Boot ${fileName}`)
       ApplicationProvider.services.push(Class)
+    })
+  }
+
+  bootFactories() {
+    const debug = this.debug
+    const fileExt = '.ts'
+    const filePath = 'database/factories'
+
+    glob.sync(`${filePath}/**/*${fileExt}`).forEach(function (file) {
+      const fileName = path.parse(file).name
+      const replacedPath = file.replace(`${fileName}${fileExt}`, fileName)
+
+      const Class = require(`../${replacedPath}`)[fileName]
+
+      if (Class.prototype.ignore) {
+        debug.warn(`🏭 Ignoring ${fileName}`)
+
+        return
+      }
+
+      debug.debug(`🏭 Boot ${fileName}`)
+      ApplicationProvider.factories.push(Class)
+    })
+  }
+
+  bootValidators() {
+    const debug = this.debug
+    const fileExt = '.ts'
+    const filePath = 'app/Validators'
+
+    glob.sync(`${filePath}/**/*${fileExt}`).forEach(function (file) {
+      const fileName = path.parse(file).name
+      const replacedPath = file.replace(`${fileName}${fileExt}`, fileName)
+
+      const Class = require(`../${replacedPath}`)[fileName]
+
+      if (Class.prototype.ignore) {
+        debug.warn(`✅ Ignoring ${fileName}`)
+
+        return
+      }
+
+      debug.debug(`✅ Boot ${fileName}`)
+      ApplicationProvider.factories.push(Class)
     })
   }
 
