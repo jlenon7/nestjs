@@ -17,6 +17,15 @@ services:
       - "5432:5432"
     networks:
       - lkp_dev
+  mongo-api-projects:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - "27017:27017"
+    networks:
+      - lkp_dev
   api-projects:
     build:
       context: .
@@ -28,7 +37,7 @@ services:
     networks:
       - lkp_dev
     restart: on-failure
-    depends_on: 
+    depends_on:
       - "redis-api-projects"
       - "postgres-api-projects"
 
