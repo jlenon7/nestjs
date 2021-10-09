@@ -1,4 +1,4 @@
-import { App } from 'test/Utils'
+import { App } from 'tests/Utils'
 import { PrismaService } from 'app/Services/Utils/PrismaService'
 import { RedisCacheService } from 'app/Services/Utils/RedisCacheService'
 

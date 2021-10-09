@@ -1,6 +1,6 @@
 import * as request from 'supertest'
 
-import { App } from 'test/Utils'
+import { App } from 'tests/Utils'
 import { Debug } from '@secjs/logger'
 import { AppModule } from 'app/AppModule'
 
