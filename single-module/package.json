@@ -11,7 +11,7 @@
     "generate:prod": "npx prisma generate --schema=./database/schema.prod.prisma",
     "prebuild": "rimraf dist",
     "build": "nest build",
-    "format": "prettier --write \"**/*.ts\" \"test/**/*.ts\"",
+    "format": "prettier --write \"**/*.ts\" \"tests/**/*.ts\"",
     "ts-node": "ts-node --transpile-only -r tsconfig-paths/register",
     "start": "nest start",
     "start:prod": "node dist/start/main.js",
@@ -19,12 +19,12 @@
     "start:dev": "nest start --watch",
     "start:debug:dev": "DEBUG=api:* nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "lint:fix": "eslint \"{config,start,app,database,test,providers}/**/*.ts\" -c ./package.json --fix",
+    "lint:fix": "eslint \"{config,start,app,database,tests,providers}/**/*.ts\" -c ./package.json --fix",
     "test": "npm run generate:dev && NODE_ENV=testing jest --verbose --setupFiles --runInBand --testTimeout=5000",
     "test:ci": "npm run generate:dev && jest --verbose --setupFiles --runInBand --testTimeout=5000",
     "test:watch": "npm run generate:dev && NODE_ENV=testing jest --watch --setupFiles --runInBand --testTimeout=5000",
     "test:cov": "npm run generate:dev && NODE_ENV=testing jest --coverage --setupFiles --runInBand --testTimeout=5000",
-    "test:e2e": "npm run generate:dev && NODE_ENV=testing jest --config ./test/jest-e2e.json --setupFiles --runInBand --testTimeout=5000",
+    "test:e2e": "npm run generate:dev && NODE_ENV=testing jest --config ./tests/jest-e2e.json --setupFiles --runInBand --testTimeout=5000",
     "test:debug": "npm run generate:dev && DEBUG=api:* NODE_ENV=testing jest --verbose --setupFiles --runInBand --testTimeout=5000"
   },
   "dependencies": {
