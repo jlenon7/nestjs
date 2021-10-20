@@ -1,0 +1,5 @@
+{
+  "delete": "Repository {{name}} has been deleted.",
+  "branch": "Branch {{branch}} has been successfully created to {{repository}} repository.",
+  "merge": "Branch {{fromBranch}} has been successfully merged to branch {{toBranch}}."
+}

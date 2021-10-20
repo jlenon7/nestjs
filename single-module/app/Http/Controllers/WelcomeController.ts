@@ -1,5 +1,6 @@
 import * as insomniaCollection from 'docs/Collection.json'
 
+import { Sntl } from '@secjs/intl'
 import { ApiTags } from '@nestjs/swagger'
 import { ConfigService } from '@nestjs/config'
 import { getBranch, getCommitId } from '@secjs/utils'
@@ -14,7 +15,9 @@ export class WelcomeController {
     return {
       branch: await getBranch(),
       commit: await getCommitId(),
-      greeting: `Welcome to ${this.configService.get('app.name')}!`,
+      greeting: Sntl.formatMessage('welcome.greeting', {
+        project: this.configService.get('app.name'),
+      }),
       name: this.configService.get('app.name'),
       domain: this.configService.get('app.domain'),
       prefix: this.configService.get('app.prefix.name'),
@@ -26,8 +29,10 @@ export class WelcomeController {
   }
 
   @Get('/')
-  @Render('main')
-  async main() {
+  @Render('documentation')
+  // TODO Render docs by locale
+  // TODO Implement @secjs/idocs
+  async documentation() {
     return this.response()
   }
 
@@ -46,6 +51,8 @@ export class WelcomeController {
     return insomniaCollection
   }
 
+  // TODO Verify if redis is alive
+  // TODO Verify if postgres is alive
   @Get('/healthcheck')
   async healthcheck() {
     return this.response()
