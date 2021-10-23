@@ -21,8 +21,8 @@ export default {
   */
 
   paths: {
-    views: join(process.cwd() + '/public/views'),
-    images: join(process.cwd(), '/public/images'),
+    views: join(process.cwd() + '/resources/views'),
+    images: join(process.cwd(), '/resources/images'),
     assets: join(process.cwd() + '/public/assets'),
     mail: [process.cwd() + '/public/views/mail'],
   },

@@ -2,8 +2,6 @@ import * as helmet from 'helmet'
 import * as express from 'express'
 import * as rateLimit from 'express-rate-limit'
 
-import ApplicationProvider from 'providers/ApplicationProvider'
-
 import { AppModule } from 'app/AppModule'
 import { NestFactory } from '@nestjs/core'
 import { ConfigService } from '@nestjs/config'
@@ -40,7 +38,6 @@ async function bootstrap() {
   SwaggerModule.setup(swagger.prefix, app, swagger.createDocument(app))
 
   await app.listen(Config.get('app.port'))
-  ApplicationProvider.clearMemory()
 }
 
 bootstrap().catch()

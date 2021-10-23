@@ -1,8 +1,20 @@
-import App from 'providers/ApplicationProvider'
+import Container from 'providers/Utils/Container'
 
+import { Ignite } from 'providers/Utils/Ignite'
 import { CacheModule } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
-import { MongooseModule } from '@nestjs/mongoose'
+
+/*
+|--------------------------------------------------------------------------
+| Ignite
+|--------------------------------------------------------------------------
+|
+| Fire Ignite to start all the NestJS application and the Container.
+|
+|
+*/
+
+Ignite.fire()
 
 /*
 |--------------------------------------------------------------------------
@@ -15,8 +27,6 @@ import { MongooseModule } from '@nestjs/mongoose'
 */
 
 export default [
-  ConfigModule.forRoot(App.configModule),
-  CacheModule.registerAsync(App.configs.cache.redis),
-  MongooseModule.forRoot(App.configs.database.default.url),
-  MongooseModule.forFeature(App.schemas),
+  ConfigModule.forRoot(Container.get('configModule')),
+  CacheModule.registerAsync(Container.get('configs').cache.redis),
 ]

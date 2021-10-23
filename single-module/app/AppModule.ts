@@ -1,17 +1,17 @@
 import kernel from 'start/kernel'
-import appProvider from 'providers/ApplicationProvider'
+import Container from 'providers/Utils/Container'
 
 import { MiddlewareConsumer, Module } from '@nestjs/common'
 
 @Module({
   imports: kernel,
-  providers: appProvider.providers,
-  controllers: appProvider.controllers,
-  exports: appProvider.providers,
+  providers: Container.get('services'),
+  controllers: Container.get('http_controllers'),
+  exports: Container.get('services'),
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    appProvider.middlewares.forEach(middleware => {
+    Container.get('http_middlewares').forEach(middleware => {
       consumer.apply(middleware.middleware).forRoutes(...middleware.routes)
     })
   }
