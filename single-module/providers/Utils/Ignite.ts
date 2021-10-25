@@ -1,7 +1,7 @@
 import * as glob from 'glob'
 import * as path from 'path'
 
-import Container from 'providers/Utils/Container'
+import { Container } from '@secjs/ioc'
 
 export class Ignite {
   static get providers() {
@@ -20,13 +20,21 @@ export class Ignite {
     return providers
   }
 
-  static fire() {
-    this.providers.forEach(Provider => new Provider().boot())
+  static fire(container: Container) {
+    container.singleton({}, 'configs')
+    container.singleton([], 'services')
+    container.singleton([], 'http_middlewares')
+    container.singleton([], 'http_controllers')
 
-    Container.set('configModule', {
-      isGlobal: true,
-      ignoreEnvFile: true,
-      load: [() => Container.get('configs')],
-    })
+    this.providers.forEach(Provider => new Provider(container).boot())
+
+    container.singleton(
+      {
+        isGlobal: true,
+        ignoreEnvFile: true,
+        load: [() => container.get('configs')],
+      },
+      'configModule',
+    )
   }
 }

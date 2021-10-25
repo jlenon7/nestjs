@@ -1,8 +1,18 @@
-import Container from 'providers/Utils/Container'
-
-import { Ignite } from 'providers/Utils/Ignite'
+import { Container } from '@secjs/ioc'
 import { CacheModule } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
+import { Ignite } from 'providers/Utils/Ignite'
+
+/*
+|--------------------------------------------------------------------------
+| Container
+|--------------------------------------------------------------------------
+|
+| This is the archives container that will be threw inside NestJS AppModule.
+|
+*/
+
+export const container = new Container()
 
 /*
 |--------------------------------------------------------------------------
@@ -11,10 +21,9 @@ import { ConfigModule } from '@nestjs/config'
 |
 | Fire Ignite to start all the NestJS application and the Container.
 |
-|
 */
 
-Ignite.fire()
+Ignite.fire(container)
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +36,6 @@ Ignite.fire()
 */
 
 export default [
-  ConfigModule.forRoot(Container.get('configModule')),
-  CacheModule.registerAsync(Container.get('configs').cache.redis),
+  ConfigModule.forRoot(container.get('configModule')),
+  CacheModule.registerAsync(container.get<any>('configs').cache.redis),
 ]

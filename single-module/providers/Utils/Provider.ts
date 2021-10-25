@@ -1,9 +1,8 @@
 import * as glob from 'glob'
 import * as path from 'path'
 
-import Container from 'providers/Utils/Container'
-
 import { Debugger } from '@secjs/logger'
+import { Container } from '@secjs/ioc'
 
 export enum InjectionTypes {
   CONFIG = 'configs',
@@ -22,8 +21,12 @@ export abstract class Provider {
   abstract get type(): InjectionTypes
   abstract get register(): ProviderRegisterContract
 
-  protected container = Container
+  protected container: Container
   protected debug = new Debugger('api:provider')
+
+  constructor(container: Container) {
+    this.container = container
+  }
 
   boot() {
     const { filePath, fileExt = 'ts', importType = 'module' } = this.register
@@ -52,7 +55,7 @@ export abstract class Provider {
       }
 
       this.debug.debug(`📦 Boot ${fileName}`)
-      this.container.get(this.type).push(Class)
+      this.container.get<Array<any>>(this.type).push(Class)
     })
   }
 }
