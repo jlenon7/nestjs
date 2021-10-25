@@ -2,6 +2,7 @@ import * as helmet from 'helmet'
 import * as express from 'express'
 import * as rateLimit from 'express-rate-limit'
 
+import { Sntl } from '@secjs/intl'
 import { AppModule } from 'app/AppModule'
 import { NestFactory } from '@nestjs/core'
 import { ConfigService } from '@nestjs/config'
@@ -17,6 +18,9 @@ async function bootstrap() {
 
   const swagger = Config.get('swagger')
   const { name, exclude } = Config.get('app.prefix')
+
+  // eslint-disable-next-line new-cap
+  await new Sntl().setDefaultLocale(Config.get('app.locale')).load()
 
   app.use(helmet())
   app.use(rateLimit(Config.get('rateLimit')))

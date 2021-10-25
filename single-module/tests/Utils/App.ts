@@ -1,3 +1,4 @@
+import { Sntl } from '@secjs/intl'
 import { Test } from '@nestjs/testing'
 import { Debugger } from '@secjs/logger'
 import { ConfigService } from '@nestjs/config'
@@ -33,6 +34,9 @@ export class App {
     const Config = this.getInstance(ConfigService)
     this.server.useGlobalFilters(new AllExceptionFilter(Config))
     this.server.useGlobalInterceptors(new ResponseInterceptor(Config))
+
+    // eslint-disable-next-line new-cap
+    await new Sntl().setDefaultLocale(Config.get('app.locale')).load()
 
     await this.server.init()
 

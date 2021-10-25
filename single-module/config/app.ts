@@ -165,12 +165,12 @@ export default {
   | Default Locale
   |--------------------------------------------------------------------------
   |
-  | Default locale to be used by Antl provider. You can always switch drivers
-  | in runtime or use the official Antl middleware to detect the driver
+  | Default locale to be used by Sntl provider. You can always switch drivers
+  | in runtime or use the official Sntl middleware to detect the driver
   | based on HTTP headers/query string.
   |
   */
-  locale: Env('APP_LOCALE', 'pt'),
+  locale: Env('APP_LOCALE', 'en-us'),
 
   /*
   |--------------------------------------------------------------------------
