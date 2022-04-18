@@ -7,8 +7,8 @@ export class FactoriesProvider extends Provider {
 
   get register() {
     return {
-      fileExt: 'ts',
-      filePath: 'database/factories',
+      importType: 'module',
+      path: 'database/factories',
     }
   }
 }

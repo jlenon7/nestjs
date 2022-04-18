@@ -1,13 +1,7 @@
 import * as packageJson from '../package.json'
 
-import Env from '@secjs/env'
-
 import { RequestMethod } from '@nestjs/common'
-import { IFullException } from 'app/Http/Filters/AllExceptionFilter'
 
-export interface IErrorMappers {
-  secJs: (exception: any) => IFullException
-}
 export interface IAppConfig {
   name: string
   description: string
@@ -29,7 +23,7 @@ export interface IAppConfig {
       signOptions: { expiresIn: number }
     }
   }
-  errorMappers: IErrorMappers
+  errorMappers: any
 }
 
 export default {
@@ -165,12 +159,12 @@ export default {
   | Default Locale
   |--------------------------------------------------------------------------
   |
-  | Default locale to be used by Sntl provider. You can always switch drivers
-  | in runtime or use the official Sntl middleware to detect the driver
+  | Default locale to be used by Antl provider. You can always switch drivers
+  | in runtime or use the official Antl middleware to detect the driver
   | based on HTTP headers/query string.
   |
   */
-  locale: Env('APP_LOCALE', 'en-us'),
+  locale: Env('APP_LOCALE', 'pt'),
 
   /*
   |--------------------------------------------------------------------------
@@ -200,7 +194,7 @@ export default {
   },
 
   errorMappers: {
-    secJs: (exception: any): IFullException => {
+    secJs: (exception: any): any => {
       return {
         isSecJsException: true,
         name: exception.name,

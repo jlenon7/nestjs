@@ -1,18 +1,30 @@
-# Single Module 😸
+# NestJS NoSQL 😸
 
-> NestJS single module template API
+> NestJS single module template API for NoSQL applications
 
-<img src="../.github/module.jpg" width="200px" align="right" hspace="30px" vspace="100px">
+<img src=".gitlab/box.png" width="200px" align="right" hspace="30px" vspace="100px">
 
 ## 🚀 Running the project
 
-Install dependencies
+Run a new `MongoDB` instance with Docker
+
+```bash
+docker run --name=mongodb-devel -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=root -e MONGO_INITDB_ROOT_PASSWORD=root -d mongo
+```
+
+Run a new `Redis` instance with Docker
+
+```bash
+docker run --name=redis-devel --publish=6379:6379 --hostname=redis --restart=on-failure --detach redis:latest
+```
+
+Now you can start running the project, install dependencies using npm
 
 ```bash
 npm install
 ```
 
-Generate the archive .env and change the connection of `Redis` and `PostgreSQL`
+Generate the archive .env and change the connection of `Redis` and `MongoDB`
 
 ```bash
 cp .env.example .env && cp .env.example .env.testing
@@ -50,4 +62,4 @@ See the project documentation accessing the main route **/**
 
 ---
 
-Made with 🖤 by jlenon7 👨‍💻
+Made with 🖤 by [jlenon7](https://github.com/jlenon7) 👨‍💻

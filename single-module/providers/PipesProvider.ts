@@ -7,8 +7,8 @@ export class PipesProvider extends Provider {
 
   get register() {
     return {
-      fileExt: 'ts',
-      filePath: 'app/Pipes',
+      importType: 'module',
+      path: 'app/Pipes',
     }
   }
 }

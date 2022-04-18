@@ -1,18 +1,9 @@
-import {
-  Inject,
-  Injectable,
-  NestMiddleware,
-  RequestMethod,
-} from '@nestjs/common'
-
 import { Sntl } from '@secjs/intl'
-import { ConfigService } from '@nestjs/config'
 import { RouteMiddleware } from 'app/Contracts/RouteMiddlewareContract'
+import { Injectable, NestMiddleware, RequestMethod } from '@nestjs/common'
 
 @Injectable()
 export class IntlMiddleware implements NestMiddleware {
-  @Inject(ConfigService) private configService: ConfigService
-
   static get routes(): RouteMiddleware[] {
     return [{ path: '/', method: RequestMethod.ALL }]
   }
@@ -21,7 +12,9 @@ export class IntlMiddleware implements NestMiddleware {
     req.locale =
       req.headers['accept-language'] ||
       req.query.lang ||
-      this.configService.get('app.locale')
+      Config.get('app.locale')
+
+    req.locale = req.locale.split(',')[0].toLowerCase()
 
     Sntl.forLocale(req.locale)
 

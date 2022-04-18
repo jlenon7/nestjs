@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, shrink-to-fit=no">
-  <link href="assets/images/linkapi-full.ico" rel="icon" />
+  <link href="assets/images/box.png" rel="icon" />
   <title>Documentation | {{ name }}</title>
   <meta name="description" content="Welcome to {{ name }} documentation page!">
-  <meta name="author" content="LinkApi Solutions">
+  <meta name="author" content="jlenon7">
 
   <!-- Stylesheet -->
 
@@ -48,7 +48,7 @@
         <button id="sidebarCollapse" class="navbar-toggler d-block d-md-none" type="button"><span></span><span class="w-75"></span><span></span></button>
 
         <!-- Logo -->
-        <a class="logo ml-md-3" href="/" title="Home"> <img src="assets/images/logo-linkapi-horizontal.png" width="200" alt="Home"/> </a>
+        <a class="logo ml-md-3" href="/" title="Home"> <img src="assets/images/box.png" width="200" alt="Home"/> </a>
         <span class="text-2 text-light ml-2">v{{ version }} | {{ branch }}</span>
         <!-- Logo End -->
 
@@ -87,21 +87,25 @@
           <ul class="nav flex-column">
             <li class="nav-item"><a class="nav-link" href="#idocs_env_host">HOST</a></li>
             <li class="nav-item"><a class="nav-link" href="#idocs_env_port">PORT</a></li>
+            <li class="nav-item"><a class="nav-link" href="#idocs_env_node_ts">NODE_TS</a></li>
             <li class="nav-item"><a class="nav-link" href="#idocs_env_node_env">NODE_ENV</a></li>
-            <li class="nav-item"><a class="nav-link" href="#idocs_env_app_prefix">APP_PREFIX</a></li>
-            <li class="nav-item"><a class="nav-link" href="#idocs_env_app_key">APP_KEY</a></li>
             <li class="nav-item"><a class="nav-link" href="#idocs_env_app_name">APP_NAME</a></li>
             <li class="nav-item"><a class="nav-link" href="#idocs_env_app_source">APP_SOURCE</a></li>
+            <li class="nav-item"><a class="nav-link" href="#idocs_env_app_domain">APP_DOMAIN</a></li>
+            <li class="nav-item"><a class="nav-link" href="#idocs_env_app_prefix">APP_PREFIX</a></li>
+            <li class="nav-item"><a class="nav-link" href="#idocs_env_app_locale">APP_LOCALE</a></li>
             <li class="nav-item"><a class="nav-link" href="#idocs_env_app_description">APP_DESCRIPTION</a></li>
+            <li class="nav-item"><a class="nav-link" href="#idocs_env_app_key">APP_KEY</a></li>
+            <li class="nav-item"><a class="nav-link" href="#idocs_env_db_connection">DB_CONNECTION</a></li>
             <li class="nav-item"><a class="nav-link" href="#idocs_env_db_host">DB_HOST</a></li>
             <li class="nav-item"><a class="nav-link" href="#idocs_env_db_options">DB_OPTIONS</a></li>
             <li class="nav-item"><a class="nav-link" href="#idocs_env_db_username">DB_USERNAME</a></li>
             <li class="nav-item"><a class="nav-link" href="#idocs_env_db_password">DB_PASSWORD</a></li>
             <li class="nav-item"><a class="nav-link" href="#idocs_env_db_database">DB_DATABASE</a></li>
-            <li class="nav-item"><a class="nav-link" href="#idocs_env_db_connection">DB_CONNECTION</a></li>
             <li class="nav-item"><a class="nav-link" href="#idocs_env_redis_host">REDIS_HOST</a></li>
             <li class="nav-item"><a class="nav-link" href="#idocs_env_redis_port">REDIS_PORT</a></li>
             <li class="nav-item"><a class="nav-link" href="#idocs_env_redis_password">REDIS_PASSWORD</a></li>
+            <li class="nav-item"><a class="nav-link" href="#idocs_env_filesystem_disk">FILESYSTEM_DISK</a></li>
           </ul>
         </li>
         <li class="nav-item"><a class="nav-link" href="#idocs_resources">🧩 Resources</a>
@@ -134,7 +138,7 @@
             <div class="col-sm-6 col-lg-4">
               <ul class="list-unstyled">
                 <li><strong>Version:</strong> {{ version }}</li>
-                <li><strong>Author:</strong> <a href="https://www.linkapi.solutions/" target="_blank">LinkApi</a></li>
+                <li><strong>Author:</strong> <a href="https://github.com/jlenon7" target="_blank">jlenon7</a></li>
               </ul>
             </div>
             <div class="col-sm-6 col-lg-4">
@@ -144,7 +148,7 @@
               </ul>
             </div>
           </div>
-          <p class="alert alert-info">If you have any questions that are beyond the scope of this documentation, Please contact LinkApi product team by <a href="mailto:product@linkapi.com.br">email</a>.</p>
+          <p class="alert alert-info">If you have any questions that are beyond the scope of this documentation, Please contact me by <a href="mailto:lenonSec7@gmail.com">email</a>.</p>
         </section>
 
         <hr class="divider">
@@ -213,13 +217,27 @@
           <hr>
 
           <h3 id="idocs_history">History</h3>
-          <p align="justify">The heart of the project is within <b>start/kernel.ts</b>, <b>app/AppModule.ts</b> and <b>providers/ApplicationProvider</b>. <b>start/kernel.ts</b> is where an array of imports is created to be used within NestJS, this array is always called in the imports of the AppModule, and he loads some of the <b>config/*.ts</b> files from the project.</p>
+          <p align="justify">
+            The heart of the project is within <b>start/kernel.ts</b>, <b>app/AppModule.ts</b> and <b>providers/*Provider.ts</b>. In <b>start/kernel.ts</b>
+            is where an array of imports is created to be used within NestJS, this array is always called in the imports of the AppModule. And the instance of container
+            files is created in <b>start/kernel.ts</b> too to be used inside Ignite class.
+          </p>
 
           <hr>
 
           <h3 id="idocs_project_structure">Project structure</h3>
-          <p align="justify"><b>providers/ApplicationProvider</b> load all the providers (services, repositories, models, guards, middlewares, pipes and controllers) from the application, AppModule will call ApplicationProvider as a <b>Singleton</b> and <b>constructor</b> will execute all the boot methods inside it and creating arrays to use inside AppModule providers and controllers. Basically if you need to create a new <b>controller</b> or <b>service</b>, you don't need to pass it into the AppModule, just create the file and let ApplicationProvider take care of the rest.</p>
-          <p>🛑 Is extremely important to follow this project structure to <b>providers/ApplicationProvider</b> works</p>
+          <p align="justify">
+            <b>providers/*Provider.ts</b> load all the providers (services, repositories, models, guards, middlewares, pipes, controllers, middlewares, etc...)
+            from the application. The Ignite class when fired will boot all this <b>providers/*Provider.ts</b> in <b>start/kernel.ts</b> and create objects/arrays to use
+            inside AppModule services, controllers, middlewares and configurations. Basically if you need to create a new <b>services, controller, middleware or configuration</b>,
+            you don't need to pass it into the AppModule, just create the file and let the providers take care of the rest.
+          </p>
+
+          <p align="justify">
+            You can create custom providers as <b>providers/*Provider.ts</b> to inject custom folders inside NestJS container.
+          </p>
+
+          <p>🛑 Is extremely important to follow this project structure to <b>providers/*Provider.ts</b> works</p>
           <pre>
             <code>app
 ├── Contracts
@@ -231,10 +249,15 @@
 │   ├── Services
 ├── Http
 │   ├── Filters
+│   │   ├── *Filter.ts
 │   ├── Guards
+│   │   ├── *Guard.ts
 │   ├── Interceptors
+│   │   ├── *Interceptor.ts
 │   ├── Middlewares
+│   │   ├── *Middleware.ts
 │   ├── Controllers
+│   │   ├── *Controller.ts
 ├── Models
 │   ├── *.ts
 ├── Pipes
@@ -247,8 +270,11 @@
 │   ├── *.ts
 ├── Services
 │   ├── Api
+│   │   ├── *Service.ts
 │   ├── Collections
+│   │   ├── *Collection.ts
 │   ├── Utils
+│   │   ├── *Service.ts
 ├── Utils
 │   ├── *.ts
 ├── Validators
@@ -257,19 +283,58 @@
 config
 ├── *.ts
 database
-├── *.ts
+├── factories
+│   ├── *Factory.ts
+├── migrations
+│   ├── *.ts
+│   ├── *.sql
+├── seeds
+│   ├── *Seeder.ts
+├── *.prisma
 ├── *.sql
 providers
-├── *.ts
-├── ApplicationProvider.ts
+├── Utils
+│   ├── Ignite.ts
+│   ├── Provider.ts
+├── *Provider.ts
+public
+├── *
+│   ├── *.*
+├── assets
+│   ├── css
+│   ├── images
+│   ├── js
+│   ├── sass
+│   ├── vendor
+resources
+├── locales
+│   ├── *
+│   │   ├── *.json
+│   ├── en-us
+│   │   ├── *.json
+│   ├── pt-br
+│   │   ├── *.json
+├── views
+│   ├── *
+│   │   ├── *.hbs
 start
 ├── kernel.ts
 ├── main.ts
+storage
+├── app
+│   ├── *
+│   │   ├── *.*
+│   ├── public
+│   │   ├── *.*
+├── logs
+│   ├── secjs.log
 tests
 ├── E2E
-│   ├── Resource Name
+│   ├── ResourceName
+│   │   ├── *.spec.ts
 ├── Unit
-│   ├── Resource Name
+│   ├── ResourceName
+│   │   ├── *.spec.ts
 ├── Utils
 │   ├── App.ts
 │   ├── Database.ts</code>
@@ -297,9 +362,33 @@ tests
 
           <hr>
 
+          <h3 id="idocs_env_node_ts">NODE_TS</h3>
+          <p>Used to verify if is going to run TS or JS code, helps Path class to get files from root or dist folder.</p>
+          <pre><code>NODE_TS="false"</code></pre>
+
+          <hr>
+
           <h3 id="idocs_env_node_env">NODE_ENV</h3>
           <p>Used to set the node environment that the API is running.</p>
           <pre><code>NODE_ENV="development"</code></pre>
+
+          <hr>
+
+          <h3 id="idocs_env_app_name">APP_NAME</h3>
+          <p>Used to set the API name for documentation purpose.</p>
+          <pre><code>APP_NAME="NestJS SQL"</code></pre>
+
+          <hr>
+
+          <h3 id="idocs_env_app_source">APP_SOURCE</h3>
+          <p>Used to set the API source, the git repository or download link of this project.</p>
+          <pre><code>APP_SOURCE="https://github.com/jlenon7/nestjs"</code></pre>
+
+          <hr>
+
+          <h3 id="idocs_env_app_domain">APP_DOMAIN</h3>
+          <p>Used to set the API domain from the project, used to access static images and for documentation purpose.</p>
+          <pre><code>APP_DOMAIN="http://127.0.0.1:3000"</code></pre>
 
           <hr>
 
@@ -309,63 +398,57 @@ tests
 
           <hr>
 
+          <h3 id="idocs_env_app_locale">APP_LOCALE</h3>
+          <p>Used to set the API locale for Internationalization purpose with Sntl.</p>
+          <pre><code>APP_LOCALE="en-us"</code></pre>
+
+          <hr>
+
+          <h3 id="idocs_env_app_description">APP_DESCRIPTION</h3>
+          <p>Used to set the API description for documentations.</p>
+          <pre><code>APP_DESCRIPTION="NestJS SQL Service"</code></pre>
+
+          <hr>
+
           <h3 id="idocs_env_app_key">APP_KEY</h3>
           <p>Used to create hashs and authenticate requests by apiKey query param.</p>
           <pre><code>APP_KEY=""</code></pre>
 
           <hr>
 
-          <h3 id="idocs_env_app_name">APP_NAME</h3>
-          <p>Used to set the API name for documentations.</p>
-          <pre><code>APP_NAME="API Projects"</code></pre>
-
-          <hr>
-
-          <h3 id="idocs_env_app_source">APP_SOURCE</h3>
-          <p>Used to set the source link of the project.</p>
-          <pre><code>APP_SOURCE="https://github.com/organization/project-name-here"</code></pre>
-
-          <hr>
-
-          <h3 id="idocs_env_app_description">APP_DESCRIPTION</h3>
-          <p>Used to set the API description for documentations.</p>
-          <pre><code>APP_DESCRIPTION="Projects API Service"</code></pre>
+          <h3 id="idocs_env_db_connection">DB_CONNECTION</h3>
+          <p>Used to set the type of connection to use in connection to database.</p>
+          <pre><code>DB_CONNECTION="postgre"</code></pre>
 
           <hr>
 
           <h3 id="idocs_env_db_host">DB_HOST</h3>
-          <p>Used to connect to Mongo database host.</p>
-          <pre><code>DB_HOST="cluster0.uagp0.mongodb.net"</code></pre>
+          <p>Used to connect to database host.</p>
+          <pre><code>DB_HOST="127.0.0.1:5433"</code></pre>
 
           <hr>
 
           <h3 id="idocs_env_db_options">DB_OPTIONS</h3>
-          <p>Used to connect to Mongo database with some options you preffer as query string.</p>
-          <pre><code>DB_OPTIONS="retryWrites=true&w=majority"</code></pre>
+          <p>Used to connect to database with some options you prefer as query string.</p>
+          <pre><code>DB_OPTIONS="schema=public"</code></pre>
 
           <hr>
 
           <h3 id="idocs_env_db_username">DB_USERNAME</h3>
-          <p>Used to connect to Mongo database with some determined user.</p>
-          <pre><code>DB_USERNAME="root"</code></pre>
+          <p>Used to connect to database with some determined user.</p>
+          <pre><code>DB_USERNAME="postgres"</code></pre>
 
           <hr>
 
           <h3 id="idocs_env_db_password">DB_PASSWORD</h3>
-          <p>Used to connect to Mongo database with some determined password.</p>
+          <p>Used to connect to database with some determined password.</p>
           <pre><code>DB_PASSWORD="root"</code></pre>
 
           <hr>
 
           <h3 id="idocs_env_db_database">DB_DATABASE</h3>
-          <p>Used to connect to a specific Mongo database.</p>
-          <pre><code>DB_DATABASE="root"</code></pre>
-
-          <hr>
-
-          <h3 id="idocs_env_db_connection">DB_CONNECTION</h3>
-          <p>Used to set the type of connection to use in connection to Mongo database.</p>
-          <pre><code>DB_CONNECTION="mongodb+srv"</code></pre>
+          <p>Used to connect to a specific database.</p>
+          <pre><code>DB_DATABASE="postgres"</code></pre>
 
           <hr>
 
@@ -384,6 +467,12 @@ tests
           <h3 id="idocs_env_redis_password">REDIS_PASSWORD</h3>
           <p>Used to connect to Redis database for caching.</p>
           <pre><code>REDIS_PASSWORD=""</code></pre>
+
+          <hr>
+
+          <h3 id="idocs_env_filesystem_disk">FILESYSTEM_DISK</h3>
+          <p>Used to set the default filesystem disk of @secjs/storage package.</p>
+          <pre><code>FILESYSTEM_DISK="local"</code></pre>
         </section>
 
         <hr class="divider">
@@ -401,7 +490,7 @@ tests
           <hr>
 
           <h3 id="idocs_insomnia">Insomnia</h3>
-          <p>If you prefer a more detailed documentation use <a class="ml-1" target="_blank" href="{{ domain }}{{ prefix }}/insomnia"><i class="fas fa-external-link-alt"></i> Insomnia collection</a></p>
+          <p>If you prefer a more detailed documentation use <a class="ml-1" target="_blank" href="{{ repository }}/-/blob/main/.gitlab/docs/Collection.json"><i class="fas fa-external-link-alt"></i> Insomnia collection</a></p>
 
           <hr>
 
@@ -431,7 +520,7 @@ _repositories=['user'] // Will include repositories inside project and user insi
         <!-- Source -->
         <section id="idocs_source">
           <h2>😸 Source</h2>
-          <p class="text-4">Go to <a class="ml-1" target="_blank" href="{{ repository }}"><i class="fas fa-external-link-alt"></i> Azure DevOps repository</a></p>
+          <p class="text-4">Go to <a class="ml-1" target="_blank" href="{{ repository }}"><i class="fas fa-external-link-alt"></i> Git repository</a></p>
         </section>
 
         <hr class="divider">
@@ -439,7 +528,7 @@ _repositories=['user'] // Will include repositories inside project and user insi
         <!-- Support -->
         <section id="idocs_support">
           <h2>🆘 Support</h2>
-          <p class="text-4">Please provide a question in <a class="ml-1" target="_blank" href="https://stackoverflow.com/c/linkapi/questions"><i class="fas fa-external-link-alt"></i>LinkApi Stack Overflow</a> organization</p>
+          <p class="text-4">Please provide a question in <a class="ml-1" target="_blank" href="https://stackoverflow.com"><i class="fas fa-external-link-alt"></i> Stack Overflow</a></p>
         </section>
 
         <hr class="divider">
@@ -464,7 +553,7 @@ _repositories=['user'] // Will include repositories inside project and user insi
   <!-- Footer -->
   <footer id="footer" class="section bg-dark footer-text-light">
     <div class="container">
-      <p class="text-center">Copyright &copy; 2021 <a href="https://www.linkapi.solutions/">LinkApi Solutions</a>. All Rights Reserved.</p>
+      <p class="text-center">Copyright &copy; 2021 <a href="https://github.com/jlenon7">João Lenon</a>. All Rights Reserved.</p>
     </div>
   </footer>
   <!-- Footer end -->

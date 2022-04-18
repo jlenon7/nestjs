@@ -1,4 +1,4 @@
-import appConfig from './app'
+import { Config } from '@secjs/config'
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger'
 
 export interface ISwaggerConfig {
@@ -7,14 +7,14 @@ export interface ISwaggerConfig {
 }
 
 export default {
-  prefix: `${appConfig.prefix.name}/swagger`,
+  prefix: `${Config.get('app.prefix.name')}/swagger`,
   createDocument: app =>
     SwaggerModule.createDocument(
       app,
       new DocumentBuilder()
-        .setTitle(appConfig.name)
-        .setDescription(appConfig.description)
-        .setVersion(appConfig.version)
+        .setTitle(Config.get('app.name'))
+        .setDescription(Config.get('app.description'))
+        .setVersion(Config.get('app.version'))
         // .addApiKey({ type: 'apiKey', name: 'apiKey', in: 'query' }, 'apiKey')
         .build(),
       {},

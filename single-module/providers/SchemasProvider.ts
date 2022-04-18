@@ -1,14 +1,14 @@
 import { Provider, InjectionTypes } from 'providers/Utils/Provider'
 
-export class MiddlewaresProvider extends Provider {
+export class SchemasProvider extends Provider {
   get type() {
-    return InjectionTypes.HTTP_MIDDLEWARE
+    return InjectionTypes.SCHEMA
   }
 
   get register() {
     return {
       importType: 'module',
-      path: 'app/Http/Middlewares',
+      path: 'app/Schemas',
     }
   }
 }

@@ -7,8 +7,8 @@ export class ValidatorsProvider extends Provider {
 
   get register() {
     return {
-      fileExt: 'ts',
-      filePath: 'app/Validators',
+      importType: 'module',
+      path: 'app/Validators',
     }
   }
 }

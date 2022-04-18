@@ -1,11 +1,13 @@
-import { Debugger } from '@secjs/logger'
-
+import { Logger } from '@secjs/logger'
 import { RouteMiddleware } from 'app/Contracts/RouteMiddlewareContract'
 import { Injectable, NestMiddleware, RequestMethod } from '@nestjs/common'
 
 @Injectable()
 export class LogHttpMiddleware implements NestMiddleware {
-  private debug = new Debugger('api:requests')
+  private logger = new Logger({
+    namespace: 'api:requests',
+    context: 'LogHttpMiddleware',
+  }).changeDefaultChannel('debug')
 
   static get routes(): RouteMiddleware[] {
     return [{ path: '*', method: RequestMethod.ALL }]
@@ -16,8 +18,8 @@ export class LogHttpMiddleware implements NestMiddleware {
     const method = req.method
     const rateLimit = req.rateLimit
 
-    this.debug.debug(`${method} - ${url}`)
-    this.debug.debug({ rateLimit: rateLimit })
+    this.logger.info(`REQUEST: ${method} - ${url}`)
+    this.logger.warn(`Rate limit: ${JSON.stringify(rateLimit)}`)
 
     next()
   }

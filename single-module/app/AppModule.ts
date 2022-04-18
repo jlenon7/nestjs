@@ -11,7 +11,7 @@ import { MiddlewareConsumer, Module } from '@nestjs/common'
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     container.get<Array<any>>('http_middlewares').forEach(middleware => {
-      consumer.apply(middleware.middleware).forRoutes(...middleware.routes)
+      consumer.apply(middleware).forRoutes(...middleware.routes)
     })
   }
 }

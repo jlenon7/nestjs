@@ -1,7 +1,6 @@
 import * as request from 'supertest'
 
 import { App } from 'tests/Utils'
-import { Debug } from '@secjs/logger'
 import { AppModule } from 'app/AppModule'
 
 describe('\n[E2E] Healthcheck 🔍', () => {
@@ -17,7 +16,7 @@ describe('\n[E2E] Healthcheck 🔍', () => {
     expect(body.method).toBe(method)
     expect(body.status).toBe(status)
     expect(body.data.commit).toBeTruthy()
-    expect(body.data.greeting).toBe('Welcome to API Projects!')
+    expect(body.data.greeting).toBe('Welcome to NestJS NoSQL!')
   })
 
   it('should return healthcheck payload from API in pt-br', async () => {
@@ -33,20 +32,24 @@ describe('\n[E2E] Healthcheck 🔍', () => {
     expect(body.method).toBe(method)
     expect(body.status).toBe(status)
     expect(body.data.commit).toBeTruthy()
-    expect(body.data.greeting).toBe('Bem vindo a API Projects!')
+    expect(body.data.greeting).toBe('Bem vindo a NestJS NoSQL!')
   })
 })
 
 let app: App
 
 beforeEach(async () => {
-  Debug(`Executing ${beforeEach.name}`, 'api:test')
+  Log.channel('debug').warn(`Executing ${beforeEach.name}`, {
+    namespace: 'api:testing',
+  })
 
   app = await new App([AppModule]).initApp()
 })
 
 afterEach(async () => {
-  Debug(`Executing ${afterEach.name}`, 'api:test')
+  Log.channel('debug').warn(`Executing ${afterEach.name}`, {
+    namespace: 'api:testing',
+  })
 
   await app.closeApp()
 })

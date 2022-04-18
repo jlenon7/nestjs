@@ -1,19 +1,16 @@
-import * as glob from 'glob'
-import * as path from 'path'
-
-import { Debugger } from '@secjs/logger'
 import { Container } from '@secjs/ioc'
+import { Folder, Path } from '@secjs/utils'
+import { InternalServerException } from '@secjs/exceptions'
 
 export enum InjectionTypes {
-  CONFIG = 'configs',
+  SCHEMA = 'schemas',
   SERVICE = 'services',
   HTTP_MIDDLEWARE = 'http_middlewares',
   HTTP_CONTROLLER = 'http_controllers',
 }
 
 export interface ProviderRegisterContract {
-  filePath: string
-  fileExt?: string
+  path: string
   importType?: string
 }
 
@@ -22,39 +19,62 @@ export abstract class Provider {
   abstract get register(): ProviderRegisterContract
 
   protected container: Container
-  protected debug = new Debugger('api:provider')
 
   constructor(container: Container) {
     this.container = container
   }
 
   boot() {
-    const { filePath, fileExt = 'ts', importType = 'module' } = this.register
+    const { path, importType = 'module' } = this.register
 
-    glob.sync(`${filePath}/**/*.${fileExt}`).forEach(file => {
-      const fileName = path.parse(file).name
-      const replacedPath = `${process.cwd()}/dist/${file.replace(
-        `.${fileExt}`,
-        '.js',
-      )}`
+    const folder = new Folder(Path.pwd(path))
+
+    if (!folder.folderExists) return
+
+    folder.loadSync()
+
+    const extension = Env('NODE_TS', '') === 'true' ? 'ts' : 'js'
+
+    folder.getFilesByPattern(`**/*.${extension}`, true).forEach(file => {
+      if (file.extension === '.d.ts') return
 
       if (importType === 'default') {
-        this.debug.debug(`📦 Boot ${fileName}`)
+        Log.channel('debug').info(`📦 Boot ${file.name}`, {
+          namespace: 'api:providers',
+        })
 
-        this.container.get(this.type)[fileName] = require(replacedPath).default
-
-        return
+        this.container.get(this.type)[file.name] = require(file.path).default
       }
 
-      const Class = require(replacedPath)[fileName]
+      const Class = require(file.path)[file.name]
+
+      if (!Class) {
+        throw new InternalServerException(
+          `Provider class name ${file.name} does not exists in exported members inside ${file.path}. The exported class must have the same name of the file to be imported.`,
+        )
+      }
 
       if (Class?.prototype?.ignore) {
-        this.debug.warn(`📦 Ignoring ${fileName}`)
+        Log.channel('debug').warn(`📦 Ignoring ${file.name}`, {
+          namespace: 'api:providers',
+        })
 
         return
       }
 
-      this.debug.debug(`📦 Boot ${fileName}`)
+      if (this.type === InjectionTypes.SCHEMA) {
+        const Schema = require(file.path)[`${file.name}Schema`]
+
+        this.container
+          .get<Array<any>>(this.type)
+          .push({ name: Class.name, schema: Schema })
+
+        return
+      }
+
+      Log.channel('debug').info(`📦 Boot ${file.name}`, {
+        namespace: 'api:providers',
+      })
       this.container.get<Array<any>>(this.type).push(Class)
     })
   }

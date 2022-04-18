@@ -34,4 +34,15 @@ export default {
   |
   */
   services: {},
+
+  /*
+  |--------------------------------------------------------------------------
+  | Ignored routes
+  |--------------------------------------------------------------------------
+  |
+  | All the routes that need to be ignored inside ResponseInterceptor.
+  |
+  */
+
+  ignoredRoutes: ['/'],
 } as IHttpConfig

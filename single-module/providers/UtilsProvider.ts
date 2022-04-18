@@ -7,8 +7,8 @@ export class UtilsProvider extends Provider {
 
   get register() {
     return {
-      fileExt: 'ts',
-      filePath: 'app/Utils',
+      importType: 'module',
+      path: 'app/Utils',
     }
   }
 }

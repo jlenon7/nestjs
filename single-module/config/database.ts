@@ -1,5 +1,3 @@
-import Env from '@secjs/env'
-
 const createUri = (name: string): string => {
   if (name === 'default') name = ''
 
@@ -23,7 +21,6 @@ export interface IDatabaseConfig {
       useUnifiedTopology: boolean
       connectionName: string
     }
-    schemas: any[]
   }
   redis: {
     host: string
@@ -52,7 +49,6 @@ export default {
       useUnifiedTopology: true,
       connectionName: 'default',
     },
-    schemas: [],
   },
 
   /*

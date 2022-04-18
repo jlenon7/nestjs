@@ -17,7 +17,7 @@ export class QueryParamsPipe implements PipeTransform {
       let value = object[key]
 
       if (value.startsWith('[') || value.startsWith('{')) {
-        value = new Json().parse(value)
+        value = Json.parse(value)
       }
 
       const whereKey = key.split('*')[1]

@@ -1,23 +1,14 @@
 version: '3'
 
 services:
-  redis-api-projects:
+  redis-nestjs-nosql:
     image: redis
     command: redis-server
     ports:
       - "6379:6379"
     networks:
       - lkp_dev
-  postgres-api-projects:
-    image: postgres
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: root
-    ports:
-      - "5432:5432"
-    networks:
-      - lkp_dev
-  mongo-api-projects:
+  mongo-nestjs-nosql:
     image: mongo
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
@@ -26,7 +17,7 @@ services:
       - "27017:27017"
     networks:
       - lkp_dev
-  api-projects:
+  nestjs-nosql:
     build:
       context: .
       dockerfile: Dockerfile
@@ -38,8 +29,8 @@ services:
       - lkp_dev
     restart: on-failure
     depends_on:
-      - "redis-api-projects"
-      - "postgres-api-projects"
+      - "redis-nestjs-nosql"
+      - "mongo-nestjs-nosql"
 
 networks:
   lkp_dev:

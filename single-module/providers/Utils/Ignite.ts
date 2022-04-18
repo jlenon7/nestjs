@@ -1,40 +1,39 @@
-import * as glob from 'glob'
-import * as path from 'path'
-
 import { Container } from '@secjs/ioc'
+import { Folder, Path } from '@secjs/utils'
+import { InternalServerException } from '@secjs/exceptions'
 
 export class Ignite {
   static get providers() {
     const providers = []
 
-    glob.sync(`providers/*.ts`).forEach(provider => {
-      const providerName = path.parse(provider).name
-      const replacedPath = `${process.cwd()}/dist/${provider.replace(
-        `.ts`,
-        '.js',
-      )}`
+    const extension = Env('NODE_TS', '') === 'true' ? 'ts' : 'js'
 
-      providers.push(require(replacedPath)[providerName])
-    })
+    new Folder(Path.providers())
+      .loadSync()
+      .getFilesByPattern(`*Provider.${extension}`, true)
+      .forEach(file => {
+        if (file.extension === '.d.ts') return
+
+        const Class = require(file.path)[file.name]
+
+        if (!Class) {
+          throw new InternalServerException(
+            `Provider class name ${file.name} does not exists in exported members inside ${file.path}. The exported class must have the same name of the file to be imported.`,
+          )
+        }
+
+        providers.push(Class)
+      })
 
     return providers
   }
 
   static fire(container: Container) {
-    container.singleton({}, 'configs')
+    container.singleton([], 'schemas')
     container.singleton([], 'services')
     container.singleton([], 'http_middlewares')
     container.singleton([], 'http_controllers')
 
     this.providers.forEach(Provider => new Provider(container).boot())
-
-    container.singleton(
-      {
-        isGlobal: true,
-        ignoreEnvFile: true,
-        load: [() => container.get('configs')],
-      },
-      'configModule',
-    )
   }
 }

@@ -2,44 +2,35 @@ import * as helmet from 'helmet'
 import * as express from 'express'
 import * as rateLimit from 'express-rate-limit'
 
-import { Sntl } from '@secjs/intl'
+import { Path } from '@secjs/utils'
 import { AppModule } from 'app/AppModule'
 import { NestFactory } from '@nestjs/core'
-import { ConfigService } from '@nestjs/config'
 import { SwaggerModule } from '@nestjs/swagger'
-import { PrismaService } from 'app/Services/Utils/PrismaService'
 import { NestExpressApplication } from '@nestjs/platform-express'
 import { AllExceptionFilter } from 'app/Http/Filters/AllExceptionFilter'
+import { TimeoutInterceptor } from 'app/Http/Interceptors/TimeoutInterceptor'
 import { ResponseInterceptor } from 'app/Http/Interceptors/ResponseInterceptor'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule)
-  const Config: ConfigService = app.get(ConfigService)
 
-  const swagger = Config.get('swagger')
   const { name, exclude } = Config.get('app.prefix')
-
-  // eslint-disable-next-line new-cap
-  await new Sntl().setDefaultLocale(Config.get('app.locale')).load()
+  const { prefix, createDocument } = Config.get('swagger')
 
   app.use(helmet())
-  app.use(rateLimit(Config.get('rateLimit')))
+  app.use(rateLimit(Config.get('ratelimit')))
 
   app.setGlobalPrefix(name, { exclude })
   app.enableCors(Config.get('cors'))
-  app.setBaseViewsDir(Config.get('view.paths.views'))
-  app.useGlobalFilters(new AllExceptionFilter(Config))
-  app.useGlobalInterceptors(new ResponseInterceptor(Config))
+  app.setBaseViewsDir(Path.noBuild().views())
+  app.useGlobalFilters(new AllExceptionFilter())
+  app.useGlobalInterceptors(new ResponseInterceptor(), new TimeoutInterceptor())
   app.setViewEngine('hbs')
 
-  app.use('/assets', express.static(Config.get('view.paths.assets')))
-  app.use('/images', express.static(Config.get('view.paths.images')))
+  app.use('/assets', express.static(Path.noBuild().assets()))
+  app.use('/images', express.static(Path.noBuild().storage('app/images')))
 
-  const prismaService: PrismaService = app.get(PrismaService)
-
-  prismaService.enableShutdownHooks(app)
-
-  SwaggerModule.setup(swagger.prefix, app, swagger.createDocument(app))
+  SwaggerModule.setup(prefix, app, createDocument(app))
 
   await app.listen(Config.get('app.port'))
 }

@@ -7,8 +7,8 @@ export class ControllersProvider extends Provider {
 
   get register() {
     return {
-      fileExt: 'ts',
-      filePath: 'app/Http/Controllers',
+      importType: 'module',
+      path: 'app/Http/Controllers',
     }
   }
 }

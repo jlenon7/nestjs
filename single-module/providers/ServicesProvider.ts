@@ -7,8 +7,8 @@ export class ServicesProvider extends Provider {
 
   get register() {
     return {
-      fileExt: 'ts',
-      filePath: 'app/Services',
+      importType: 'module',
+      path: 'app/Services',
     }
   }
 }

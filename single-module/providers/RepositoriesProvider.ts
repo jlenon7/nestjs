@@ -7,8 +7,8 @@ export class RepositoriesProvider extends Provider {
 
   get register() {
     return {
-      fileExt: 'ts',
-      filePath: 'app/Repositories',
+      importType: 'module',
+      path: 'app/Repositories',
     }
   }
 }

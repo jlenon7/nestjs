@@ -7,8 +7,8 @@ export class GuardsProvider extends Provider {
 
   get register() {
     return {
-      fileExt: 'ts',
-      filePath: 'app/Http/Guards',
+      importType: 'module',
+      path: 'app/Http/Guards',
     }
   }
 }

@@ -6,27 +6,18 @@ import {
   HttpException,
 } from '@nestjs/common'
 
-import { IErrorMappers } from 'config/app'
+import { Logger } from '@secjs/logger'
 import { Request, Response } from 'express'
-import { Logger, Debug } from '@secjs/logger'
-import { ConfigService } from '@nestjs/config'
-
-export interface IFullException {
-  name?: string
-  message?: string | any
-  status?: number
-  stack?: string
-  isSecJsException?: boolean
-}
+import { ExceptionContract } from 'app/Contracts/ExceptionContract'
 
 @Catch()
 export class AllExceptionFilter implements ExceptionFilter {
-  private errorMappers: IErrorMappers
-  private logger = new Logger(AllExceptionFilter.name)
+  private logger = new Logger({
+    namespace: 'api:exceptions',
+    context: AllExceptionFilter.name,
+  })
 
-  constructor(private configService: ConfigService) {
-    this.errorMappers = this.configService.get('app.errorMappers')
-  }
+  private errorMappers = Config.get('app.errorMappers')
 
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp()
@@ -37,19 +28,21 @@ export class AllExceptionFilter implements ExceptionFilter {
 
     if (fullException.message === 'Cannot GET /favicon.ico') return
 
-    Debug({ exception: fullException }, 'api:exception')
+    this.logger.channel('debug').error(JSON.stringify(fullException))
 
-    const env = this.configService.get('app.environment')
+    const env = Config.get<string>('app.environment')
 
     if (['development', 'production'].includes(env)) {
-      this.logger.error({
-        code: fullException.name,
-        path: request.route?.path,
-        method: request.method,
-        status: fullException.status,
-        timestamp: new Date().toISOString(),
-        error: fullException,
-      })
+      this.logger.error(
+        JSON.stringify({
+          code: fullException.name,
+          path: request.route?.path,
+          method: request.method,
+          status: fullException.status,
+          timestamp: new Date().toISOString(),
+          error: fullException,
+        }),
+      )
     }
 
     const error = {
@@ -74,8 +67,8 @@ export class AllExceptionFilter implements ExceptionFilter {
     return response.status(fullException.status).json(responseError)
   }
 
-  filterException(exception: any): IFullException {
-    const fullException: IFullException = {
+  filterException(exception: any): ExceptionContract {
+    const fullException: ExceptionContract = {
       name: exception.name,
       message: exception.getResponse
         ? exception.getResponse()

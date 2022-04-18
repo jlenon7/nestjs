@@ -8,12 +8,9 @@ import {
 import { Request } from 'express'
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
-import { ConfigService } from '@nestjs/config'
 
 @Injectable()
 export class ResponseInterceptor<T> implements NestInterceptor<T, any> {
-  constructor(private configService: ConfigService) {}
-
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const ctx = context.switchToHttp()
     const request = ctx.getRequest<Request>()
@@ -24,12 +21,13 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, any> {
       status: context.switchToHttp().getResponse().statusCode,
     }
 
-    if (this.configService.get('view.routes').includes(request.path))
+    if (Config.get('http.ignoredRoutes').includes(request.path)) {
       return next.handle()
+    }
 
     return next.handle().pipe(
       map(data => {
-        if (data.data && data.meta) {
+        if (data && data.data && data.meta) {
           return {
             ...defaultResponses,
             data: data.data,

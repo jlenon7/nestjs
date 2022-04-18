@@ -1,9 +1,5 @@
-import { Sntl } from '@secjs/intl'
 import { Test } from '@nestjs/testing'
-import { Debugger } from '@secjs/logger'
-import { ConfigService } from '@nestjs/config'
 import { INestApplication } from '@nestjs/common'
-import { PrismaService } from 'app/Services/Utils/PrismaService'
 import { RedisCacheService } from 'app/Services/Utils/RedisCacheService'
 import { AllExceptionFilter } from 'app/Http/Filters/AllExceptionFilter'
 import { ResponseInterceptor } from 'app/Http/Interceptors/ResponseInterceptor'
@@ -12,14 +8,16 @@ export class App {
   public server: INestApplication
 
   private imports: any[]
-  private debug = new Debugger('api:test')
 
   constructor(imports: any[]) {
     this.imports = imports
   }
 
   getInstance<Instance = any>(instance: any) {
-    this.debug.debug(`Calling ${instance.name} instance from Nest IoC`)
+    Log.channel('debug').info(
+      `Calling ${instance.name} instance from Nest IoC`,
+      { namespace: 'api:testing' },
+    )
 
     return this.server.get<Instance>(instance) as Instance
   }
@@ -31,25 +29,25 @@ export class App {
 
     this.server = moduleRef.createNestApplication()
 
-    const Config = this.getInstance(ConfigService)
-    this.server.useGlobalFilters(new AllExceptionFilter(Config))
-    this.server.useGlobalInterceptors(new ResponseInterceptor(Config))
-
-    // eslint-disable-next-line new-cap
-    await new Sntl().setDefaultLocale(Config.get('app.locale')).load()
+    this.server.useGlobalFilters(new AllExceptionFilter())
+    this.server.useGlobalInterceptors(new ResponseInterceptor())
 
     await this.server.init()
 
-    this.debug.debug('Nest test module started')
+    Log.channel('debug').info('Nest test module started', {
+      namespace: 'api:testing',
+    })
 
     return this
   }
 
   async closeApp() {
-    this.debug.warn('Nest test module closed')
+    Log.channel('debug').warn('Nest test module closed', {
+      namespace: 'api:testing',
+    })
+
+    await this.getInstance(RedisCacheService).close()
 
     await this.server.close()
-    await this.getInstance(PrismaService).$disconnect()
-    await this.getInstance(RedisCacheService).close()
   }
 }

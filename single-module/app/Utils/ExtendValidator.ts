@@ -1,16 +1,12 @@
 import { ModuleRef } from '@nestjs/core'
 import { Validator } from '@secjs/validator'
-import { ConfigService } from '@nestjs/config'
 import { Injectable, NotImplementedException } from '@nestjs/common'
 
 @Injectable()
 export class ExtendValidator {
   private validator: Validator
 
-  constructor(
-    private moduleRef: ModuleRef,
-    private configService: ConfigService,
-  ) {
+  constructor(private moduleRef: ModuleRef) {
     this.validator = new Validator()
 
     this.validator.extendAsync('unique', this.unique)
@@ -38,9 +34,7 @@ export class ExtendValidator {
   }
 
   private getRepository(name: string) {
-    const repository = this.moduleRef.get(
-      this.configService.get(`database.tables.${name}`),
-    )
+    const repository = this.moduleRef.get(Config.get(`database.tables.${name}`))
 
     if (!repository) {
       throw new NotImplementedException(

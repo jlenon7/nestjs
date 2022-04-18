@@ -7,8 +7,8 @@ export class SeedsProvider extends Provider {
 
   get register() {
     return {
-      fileExt: 'ts',
-      filePath: 'database/seeds',
+      importType: 'module',
+      path: 'database/seeds',
     }
   }
 }
